@@ -126,10 +126,13 @@ class FunctionPositionController extends Controller
      */
     public function nested()
     {
+        $customOrder = [1, 9, 11, 5, 12, 6, 7, 8, 10, 3, 4, 2];
         $functionPositions = FunctionPosition::with([
             'subfunctionPositions.subfunctionDescriptions',
             'subfunctionPositions.functionParameters'
-        ])->orderBy('name')->get();
+        ])
+        ->orderByRaw('CASE WHEN id IN (' . implode(',', $customOrder) . ') THEN FIELD(id, ' . implode(',', $customOrder) . ') ELSE 999999 END')
+        ->get();
 
         $result = $functionPositions->map(function ($fp) {
             return [
