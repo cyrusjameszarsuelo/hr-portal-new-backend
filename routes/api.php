@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\FunctionPositionController;
+use App\Http\Controllers\OrgStructureController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -15,4 +16,6 @@ Route::post('/manage-function', [FunctionPositionController::class, 'manageFunct
 Route::get('/description/{id}', [FunctionPositionController::class, 'getDescriptionById']);
 Route::post('/manage-description', [FunctionPositionController::class, 'manageDescription']);
 Route::post('/delete-function', [FunctionPositionController::class, 'deleteFunction']);
+Route::get('/organization-structure', [OrgStructureController::class, 'index']);
+
 

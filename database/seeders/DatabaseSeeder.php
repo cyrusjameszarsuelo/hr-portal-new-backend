@@ -19,9 +19,10 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
-        $this->call(FunctionPositionSeeder::class);
-        $this->call(SubfunctionPositionSeeder::class);
-        $this->call(SubfunctionDescriptionSeeder::class);
-        $this->call(FunctionParameterSeeder::class);
+        // $this->call(FunctionPositionSeeder::class);
+        // $this->call(SubfunctionPositionSeeder::class);
+        // $this->call(SubfunctionDescriptionSeeder::class);
+        // $this->call(FunctionParameterSeeder::class);
+        $this->call(OrgStructureSeeder::class);
     }
 }
