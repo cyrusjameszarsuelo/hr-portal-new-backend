@@ -30,7 +30,7 @@ class MicrosoftAuthController extends Controller
             Log::info('Microsoft callback hit', ['full_url' => request()->fullUrl(), 'query' => $query]);
 
             // If the authorization code is missing, return helpful debug info
-            if (! array_key_exists('code', $query)) {
+            if (!array_key_exists('code', $query)) {
                 return response()->json([
                     'error' => 'missing_code',
                     'message' => 'Authorization code not present in callback. Make sure the redirect URI matches what is registered in Azure and that the initial auth request completed successfully.',
@@ -62,7 +62,7 @@ class MicrosoftAuthController extends Controller
             }
 
             // Otherwise redirect to frontend with token in querystring
-            return redirect("http://localhost:5173/login-success?token={$token}");
+            return redirect(env('MICROSOFT_REDIRECT_FRONTEND_URI') . "?token={$token}");
         } catch (\Exception $e) {
             // Log the exception for investigation
             Log::error('Microsoft OAuth error', ['message' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
