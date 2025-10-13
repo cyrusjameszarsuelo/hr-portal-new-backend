@@ -3,6 +3,10 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Event;
+
+// SocialiteProviders event class name
+use SocialiteProviders\Manager\SocialiteWasCalled;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,6 +23,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Register SocialiteProviders Microsoft listener so the provider is available
+        // when using the Socialite 'microsoft' driver.
+        Event::listen(
+            SocialiteWasCalled::class,
+            'SocialiteProviders\\Microsoft\\MicrosoftExtendSocialite@handle'
+        );
     }
 }

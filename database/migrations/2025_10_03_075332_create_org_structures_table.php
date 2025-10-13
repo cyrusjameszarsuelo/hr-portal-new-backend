@@ -17,6 +17,7 @@ return new class extends Migration {
             $table->string('lastname');
             $table->string('nickname')->nullable();
             $table->string('name');
+            $table->string('email')->nullable();
             $table->string('position_title');
             $table->string('reporting');
             $table->integer('pid')->nullable();
