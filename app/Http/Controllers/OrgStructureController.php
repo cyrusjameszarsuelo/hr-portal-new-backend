@@ -10,8 +10,7 @@ class OrgStructureController extends Controller
 {
     public function index()
     {
-        $orgStructure = OrgStructure::where('is_active', true)
-            ->get();
+        $orgStructure = OrgStructure::all();
 
         return response()->json($orgStructure);
     }
@@ -82,5 +81,28 @@ class OrgStructureController extends Controller
         $orgStructure->delete();
 
         return response()->json(['message' => 'Organization structure deleted successfully']);
+    }
+
+    public function getHeadCount()
+    {
+        // Return department and business unit headcounts. Use explicit select with
+        // COUNT to avoid ONLY_FULL_GROUP_BY SQL errors on MySQL strict modes.
+        $headCount = OrgStructure::select('department', 'business_unit')
+            ->selectRaw('COUNT(*) as headcount')
+            ->selectRaw('SUM(CASE WHEN firstname = "Employee" THEN 1 ELSE 0 END) as vacant')
+            ->selectRaw('COUNT(*) - SUM(CASE WHEN firstname = "Employee" THEN 1 ELSE 0 END) as filled')
+            ->groupBy('department', 'business_unit')
+            ->get();
+
+        // Overall totals across all departments/business units
+        $totals = OrgStructure::selectRaw('COUNT(*) as headcount')
+            ->selectRaw('SUM(CASE WHEN firstname = "Employee" THEN 1 ELSE 0 END) as vacant')
+            ->selectRaw('COUNT(*) - SUM(CASE WHEN firstname = "Employee" THEN 1 ELSE 0 END) as filled')
+            ->first();
+
+        return response()->json([
+            'data' => $headCount,
+            'totals' => $totals,
+        ]);
     }
 }

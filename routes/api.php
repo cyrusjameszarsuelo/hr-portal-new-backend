@@ -29,5 +29,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/organization-structure/add/{pid}', [OrgStructureController::class, 'store']);
 });
 
+Route::get('/get-head-count', [OrgStructureController::class, 'getHeadCount']);
 
 

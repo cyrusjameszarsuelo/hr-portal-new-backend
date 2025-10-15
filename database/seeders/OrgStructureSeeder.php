@@ -29,10 +29,27 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'OCEO',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => 'org-structure/esa.jpg'
+                'image' => 'org-structure/esa.jpg',
             ],
             [
                 'pid' => 1,
+                'is_active' => true,
+                'firstname' => '',
+                'lastname' => 'OCEO',
+                'nickname' => 'OCEO',
+                'name' => 'OCEO',
+                'email' => 'N/A',
+                'position_title' => 'N/A',
+                'reporting' => 'N/A',
+                'emp_no' => '0',
+                'level' => 'N/A',
+                'department' => 'OCEO',
+                'business_unit' => 'CORP',
+                'company' => 'MEGAWIDE',
+                'image' => null,
+            ],
+            [
+                'pid' => 2,
                 'is_active' => true,
                 'firstname' => 'Bernice Jillian',
                 'lastname' => 'Hu',
@@ -46,12 +63,12 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'OCEO',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => 'org-structure/bern.png'
+                'image' => "org-structure/bern.png",
             ],
             [
                 'pid' => 1,
                 'is_active' => false,
-                'firstname' => 'Vacant',
+                'firstname' => 'Employee',
                 'lastname' => 'Vacant',
                 'nickname' => 'Emp',
                 'name' => 'Employee',
@@ -63,12 +80,12 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'OCEO',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => null
+                'image' => "org-structure/vacant.png",
             ],
             [
                 'pid' => 1,
                 'is_active' => false,
-                'firstname' => 'Vacant',
+                'firstname' => 'Employee',
                 'lastname' => 'Vacant',
                 'nickname' => 'Emp',
                 'name' => 'Employee',
@@ -80,10 +97,10 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'OCEO',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => null
+                'image' => "org-structure/vacant.png",
             ],
             [
-                'pid' => 2,
+                'pid' => 3,
                 'is_active' => true,
                 'firstname' => 'Jellica Aine',
                 'lastname' => 'Santos',
@@ -97,10 +114,10 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'OCEO',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => 'org-structure/jelli.png'
+                'image' => "org-structure/jelli.png",
             ],
             [
-                'pid' => 2,
+                'pid' => 3,
                 'is_active' => true,
                 'firstname' => 'Joland Abby',
                 'lastname' => 'Batiancila',
@@ -114,10 +131,10 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'OCEO',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => 'org-structure/abby.png'
+                'image' => "org-structure/abby.png",
             ],
             [
-                'pid' => 2,
+                'pid' => 3,
                 'is_active' => true,
                 'firstname' => 'Rafael',
                 'lastname' => 'Saavedra',
@@ -131,10 +148,10 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'OCEO',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => 'org-structure/raf.png'
+                'image' => "org-structure/raf.png",
             ],
             [
-                'pid' => 2,
+                'pid' => 3,
                 'is_active' => true,
                 'firstname' => 'Carvey Carrick',
                 'lastname' => 'Chan',
@@ -148,7 +165,7 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'OCEO',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => 'org-structure/carvey.png'
+                'image' => "org-structure/carvey.png",
             ],
             [
                 'pid' => 2,
@@ -165,7 +182,7 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'OCEO',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => 'org-structure/myles.png'
+                'image' => "org-structure/myles.png",
             ],
             [
                 'pid' => 2,
@@ -182,7 +199,7 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'OCEO',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => 'org-structure/lei.png'
+                'image' => "org-structure/lei.png",
             ],
             [
                 'pid' => 1,
@@ -199,10 +216,11 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'OCHR',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => 'org-structure/chris.png'
+                'image' => "org-structure/chris.png",
             ],
+            // ... additional rows from CSV continue below
             [
-                'pid' => 11,
+                'pid' => 12,
                 'is_active' => true,
                 'firstname' => 'Ricci Angelo',
                 'lastname' => 'Pasamba',
@@ -216,10 +234,10 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'OCHR',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => 'org-structure/ricci.png'
+                'image' => "org-structure/ricci.png",
             ],
             [
-                'pid' => 11,
+                'pid' => 12,
                 'is_active' => true,
                 'firstname' => 'Errol Benedict',
                 'lastname' => 'Purcia',
@@ -233,10 +251,10 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'OCHR',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => 'org-structure/errol.png'
+                'image' => "org-structure/errol.png",
             ],
             [
-                'pid' => 2,
+                'pid' => 1,
                 'is_active' => true,
                 'firstname' => 'Mark Joseph',
                 'lastname' => 'Druja',
@@ -250,10 +268,10 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'OCEO',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => 'org-structure/mj.png'
+                'image' => "org-structure/mj.png",
             ],
             [
-                'pid' => 14,
+                'pid' => 1,
                 'is_active' => true,
                 'firstname' => 'Ryan',
                 'lastname' => 'Viray',
@@ -267,10 +285,10 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'OCEO',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => 'org-structure/ryan.png'
+                'image' => "org-structure/ryan.png",
             ],
             [
-                'pid' => 14,
+                'pid' => 1,
                 'is_active' => true,
                 'firstname' => 'Nelson',
                 'lastname' => 'Clerigo',
@@ -284,10 +302,10 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'OCEO',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => 'org-structure/nelson.png'
+                'image' => "org-structure/nelson.png",
             ],
             [
-                'pid' => 14,
+                'pid' => 1,
                 'is_active' => true,
                 'firstname' => 'Danny',
                 'lastname' => 'Austero',
@@ -301,10 +319,10 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'OCEO',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => 'org-structure/danny.png'
+                'image' => "org-structure/danny.png",
             ],
             [
-                'pid' => 14,
+                'pid' => 1,
                 'is_active' => true,
                 'firstname' => 'Arnel',
                 'lastname' => 'Estacoja',
@@ -318,7 +336,7 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'OCEO',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => 'org-structure/arnel.png'
+                'image' => "org-structure/arnel.png",
             ],
             [
                 'pid' => 1,
@@ -335,10 +353,10 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'BDV',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => null
+                'image' => "org-structure/jim.png",
             ],
             [
-                'pid' => 19,
+                'pid' => 20,
                 'is_active' => true,
                 'firstname' => 'Stephanie Ann',
                 'lastname' => 'Soon',
@@ -352,10 +370,10 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'BDV',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => 'org-structure/steph.png'
+                'image' => "org-structure/steph.png",
             ],
             [
-                'pid' => 20,
+                'pid' => 21,
                 'is_active' => true,
                 'firstname' => 'Danielle Marie',
                 'lastname' => 'Feliciano',
@@ -369,10 +387,10 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'BDV',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => 'org-structure/danes.png'
+                'image' => "org-structure/danes.png",
             ],
             [
-                'pid' => 20,
+                'pid' => 21,
                 'is_active' => true,
                 'firstname' => 'Jasmin',
                 'lastname' => 'Fernandez',
@@ -386,10 +404,10 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'BDV',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => 'org-structure/jas.png'
+                'image' => "org-structure/jas.png",
             ],
             [
-                'pid' => 20,
+                'pid' => 21,
                 'is_active' => true,
                 'firstname' => 'Adrian Paul',
                 'lastname' => 'Flores',
@@ -403,10 +421,10 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'BDV',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => 'org-structure/adrian.png'
+                'image' => "org-structure/adrian.png",
             ],
             [
-                'pid' => 20,
+                'pid' => 21,
                 'is_active' => true,
                 'firstname' => 'Rhiz Kathleen',
                 'lastname' => 'Contreras',
@@ -420,10 +438,10 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'BDV',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => 'org-structure/kath.png'
+                'image' => "org-structure/kath.png",
             ],
             [
-                'pid' => 19,
+                'pid' => 20,
                 'is_active' => true,
                 'firstname' => 'Milestill',
                 'lastname' => 'Young',
@@ -437,10 +455,10 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'TDV',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => 'org-structure/miles.png'
+                'image' => "org-structure/miles.png",
             ],
             [
-                'pid' => 25,
+                'pid' => 26,
                 'is_active' => true,
                 'firstname' => 'James Matthew',
                 'lastname' => 'Jaramillo',
@@ -454,10 +472,10 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'TDV',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => 'org-structure/matt.png'
+                'image' => "org-structure/matt.png",
             ],
             [
-                'pid' => 25,
+                'pid' => 26,
                 'is_active' => true,
                 'firstname' => 'Gyan Louie',
                 'lastname' => 'Gloriani',
@@ -471,10 +489,10 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'TDV',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => 'org-structure/gyan.png'
+                'image' => "org-structure/gyan.png",
             ],
             [
-                'pid' => 25,
+                'pid' => 26,
                 'is_active' => true,
                 'firstname' => 'Fernando Miguel',
                 'lastname' => 'Lozano',
@@ -488,7 +506,7 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'TDV',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => 'org-structure/lozi.png'
+                'image' => "org-structure/lozi.png",
             ],
             [
                 'pid' => 1,
@@ -505,10 +523,10 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'CCAB',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => null
+                'image' => "org-structure/lf.png",
             ],
             [
-                'pid' => 29,
+                'pid' => 30,
                 'is_active' => true,
                 'firstname' => 'Nierra Jobel',
                 'lastname' => 'Azogue',
@@ -522,11 +540,10 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'CCAB',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => 'org-structure/nierra.png'
-
+                'image' => "org-structure/nierra.png",
             ],
             [
-                'pid' => 29,
+                'pid' => 30,
                 'is_active' => true,
                 'firstname' => 'Ericson',
                 'lastname' => 'Benitez',
@@ -540,12 +557,12 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'CCAB',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => null
+                'image' => "org-structure/ericson.png",
             ],
             [
-                'pid' => 29,
-                'is_active' => false,
-                'firstname' => 'Vacant',
+                'pid' => 30,
+                'is_active' => true,
+                'firstname' => 'Employee',
                 'lastname' => 'Vacant',
                 'nickname' => 'Emp',
                 'name' => 'Employee',
@@ -557,10 +574,10 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'CCAB',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => null
+                'image' => "org-structure/vacant.png",
             ],
             [
-                'pid' => 29,
+                'pid' => 30,
                 'is_active' => true,
                 'firstname' => 'Timothy Alexander',
                 'lastname' => 'Glova',
@@ -574,7 +591,7 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'CCAB',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => 'org-structure/tim.png'
+                'image' => "org-structure/tim.png",
             ],
             [
                 'pid' => 1,
@@ -584,17 +601,17 @@ class OrgStructureSeeder extends Seeder
                 'nickname' => 'Jez',
                 'name' => 'Jez Dela Cruz',
                 'email' => 'jgdelacruz@megawide.com.ph',
-                'position_title' => 'Group Chief Finance Officer',
+                'position_title' => 'Chief Finance Officer',
                 'reporting' => 'Edgar Saavedra',
                 'emp_no' => '13067',
                 'level' => 'Executive',
                 'department' => 'FIN',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => 'org-structure/jez.png'
+                'image' => "org-structure/jez.png",
             ],
             [
-                'pid' => 34,
+                'pid' => 35,
                 'is_active' => true,
                 'firstname' => 'Reza Marie',
                 'lastname' => 'De Guzman',
@@ -608,7 +625,7 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'FIN',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => 'org-structure/reza.png'
+                'image' => "org-structure/reza.png",
             ],
             [
                 'pid' => 35,
@@ -625,10 +642,10 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'FIN',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => 'org-structure/rein.png'
+                'image' => "org-structure/rein.png",
             ],
             [
-                'pid' => 36,
+                'pid' => 37,
                 'is_active' => true,
                 'firstname' => 'Stephanie',
                 'lastname' => 'Chua',
@@ -642,10 +659,10 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'FIN',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => 'org-structure/stephchua.png'
+                'image' => "org-structure/stephchua.png",
             ],
             [
-                'pid' => 36,
+                'pid' => 37,
                 'is_active' => true,
                 'firstname' => 'Jose Enrique',
                 'lastname' => 'Sayon',
@@ -659,10 +676,10 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'FIN',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => 'org-structure/nico.png'
+                'image' => "org-structure/nico.png",
             ],
             [
-                'pid' => 36,
+                'pid' => 37,
                 'is_active' => true,
                 'firstname' => 'Eric Rian',
                 'lastname' => 'Lomibao',
@@ -676,10 +693,10 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'FIN',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => 'org-structure/eric.png'
+                'image' => "org-structure/eric.png",
             ],
             [
-                'pid' => 34,
+                'pid' => 35,
                 'is_active' => true,
                 'firstname' => 'Leah',
                 'lastname' => 'Manalastas',
@@ -693,10 +710,10 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'FIN',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => 'org-structure/leah.png'
+                'image' => "org-structure/leah.png",
             ],
             [
-                'pid' => 40,
+                'pid' => 41,
                 'is_active' => true,
                 'firstname' => 'Lady Fatima',
                 'lastname' => 'Ocampo',
@@ -710,10 +727,10 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'FIN',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => 'org-structure/lady.png'
+                'image' => "org-structure/lady.png",
             ],
             [
-                'pid' => 40,
+                'pid' => 41,
                 'is_active' => true,
                 'firstname' => 'Abegail',
                 'lastname' => 'Dela Peña',
@@ -727,10 +744,10 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'FIN',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => 'org-structure/abbydelapena.png'
+                'image' => "org-structure/abby.png",
             ],
             [
-                'pid' => 40,
+                'pid' => 41,
                 'is_active' => true,
                 'firstname' => 'Aerielle Mae',
                 'lastname' => 'Capaycapay',
@@ -744,10 +761,10 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'FIN',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => 'org-structure/aerielle.png'
+                'image' => "org-structure/aerielle.png",
             ],
             [
-                'pid' => 34,
+                'pid' => 35,
                 'is_active' => true,
                 'firstname' => 'Rolando',
                 'lastname' => 'Bondoy',
@@ -761,10 +778,10 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'FIN',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => 'org-structure/rolli.png'
+                'image' => "org-structure/rolli.png",
             ],
             [
-                'pid' => 44,
+                'pid' => 45,
                 'is_active' => true,
                 'firstname' => 'Jesiree Anne',
                 'lastname' => 'Chavez',
@@ -778,10 +795,10 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'FIN',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => 'org-structure/jes.png'
+                'image' => "org-structure/jes.png",
             ],
             [
-                'pid' => 44,
+                'pid' => 46,
                 'is_active' => true,
                 'firstname' => 'Michelle',
                 'lastname' => 'Fernandez',
@@ -795,10 +812,10 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'FIN',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => 'org-structure/mich.png'
+                'image' => "org-structure/mich.png",
             ],
             [
-                'pid' => 44,
+                'pid' => 46,
                 'is_active' => true,
                 'firstname' => 'Benedict',
                 'lastname' => 'Boac',
@@ -812,10 +829,10 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'FIN',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => 'org-structure/emp.png'
+                'image' => "org-structure/emp.png",
             ],
             [
-                'pid' => 44,
+                'pid' => 46,
                 'is_active' => true,
                 'firstname' => 'Franscoise',
                 'lastname' => 'Enriquez',
@@ -829,12 +846,12 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'FIN',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => 'org-structure/frans.png'
+                'image' => "org-structure/frans.png",
             ],
             [
-                'pid' => 44,
+                'pid' => 46,
                 'is_active' => false,
-                'firstname' => 'Vacant',
+                'firstname' => 'Employee',
                 'lastname' => 'Vacant',
                 'nickname' => 'Emp',
                 'name' => 'Employee',
@@ -846,10 +863,10 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'FIN',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => null
+                'image' => "org-structure/vacant.png",
             ],
             [
-                'pid' => 44,
+                'pid' => 45,
                 'is_active' => true,
                 'firstname' => 'Jamie',
                 'lastname' => 'Saberon',
@@ -863,7 +880,7 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'FIN',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => 'org-structure/jamie.png'
+                'image' => "org-structure/jamie.png",
             ],
             [
                 'pid' => 1,
@@ -880,10 +897,10 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'HRD',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => null
+                'image' => "org-structure/beth.png",
             ],
             [
-                'pid' => 51,
+                'pid' => 52,
                 'is_active' => true,
                 'firstname' => 'Jovie Milagros',
                 'lastname' => 'Silvestre',
@@ -897,10 +914,10 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'HRD',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => 'org-structure/jovie.png'
+                'image' => "org-structure/jovie.png",
             ],
             [
-                'pid' => 52,
+                'pid' => 53,
                 'is_active' => true,
                 'firstname' => 'Winnie',
                 'lastname' => 'Matias',
@@ -914,10 +931,10 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'HRD',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => 'org-structure/wins.png'
+                'image' => "org-structure/wins.png",
             ],
             [
-                'pid' => 52,
+                'pid' => 53,
                 'is_active' => true,
                 'firstname' => 'Jomar',
                 'lastname' => 'Buenaflor',
@@ -931,10 +948,10 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'HRD',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => 'org-structure/joms.png'
+                'image' => "org-structure/joms.png",
             ],
             [
-                'pid' => 52,
+                'pid' => 53,
                 'is_active' => true,
                 'firstname' => 'Angellica Rose',
                 'lastname' => 'Villavilla',
@@ -948,10 +965,10 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'HRD',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => 'org-structure/angel.png'
+                'image' => "org-structure/angel.png",
             ],
             [
-                'pid' => 51,
+                'pid' => 52,
                 'is_active' => true,
                 'firstname' => 'Jayson',
                 'lastname' => 'Barte',
@@ -965,10 +982,10 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'HRD',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => 'org-structure/jayson.png'
+                'image' => "org-structure/jayson.png",
             ],
             [
-                'pid' => 51,
+                'pid' => 52,
                 'is_active' => true,
                 'firstname' => 'Pryncess Hyacinth',
                 'lastname' => 'Esguerra',
@@ -982,10 +999,10 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'HRD',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => 'org-structure/pryncess.png'
+                'image' => "org-structure/pryncess.png",
             ],
             [
-                'pid' => 57,
+                'pid' => 58,
                 'is_active' => true,
                 'firstname' => 'Timothy',
                 'lastname' => 'Osma',
@@ -999,10 +1016,10 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'HRD',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => 'org-structure/timosma.png'
+                'image' => "org-structure/timosma.png",
             ],
             [
-                'pid' => 51,
+                'pid' => 52,
                 'is_active' => true,
                 'firstname' => 'John Patrick',
                 'lastname' => 'Garcia',
@@ -1016,10 +1033,10 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'HRD',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => 'org-structure/pat.png'
+                'image' => "org-structure/pat.png",
             ],
             [
-                'pid' => 51,
+                'pid' => 52,
                 'is_active' => true,
                 'firstname' => 'Nigel Bryant',
                 'lastname' => 'Evangelista',
@@ -1033,10 +1050,10 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'HRD',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => 'org-structure/nigel.png'
+                'image' => "org-structure/nigel.png",
             ],
             [
-                'pid' => 51,
+                'pid' => 52,
                 'is_active' => true,
                 'firstname' => 'Kristina Mae',
                 'lastname' => 'Inciong',
@@ -1050,10 +1067,10 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'HRD',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => 'org-structure/tin.png'
+                'image' => "org-structure/tin.png",
             ],
             [
-                'pid' => 61,
+                'pid' => 62,
                 'is_active' => true,
                 'firstname' => 'Ivana Jane',
                 'lastname' => 'Borbon',
@@ -1067,10 +1084,10 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'HRD',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => null
+                'image' => "org-structure/jing.png",
             ],
             [
-                'pid' => 61,
+                'pid' => 62,
                 'is_active' => true,
                 'firstname' => 'John Paul',
                 'lastname' => 'Magdua',
@@ -1084,10 +1101,10 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'HRD',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => 'org-structure/paul.png'
+                'image' => "org-structure/paul.png",
             ],
             [
-                'pid' => 61,
+                'pid' => 62,
                 'is_active' => true,
                 'firstname' => 'Rusky',
                 'lastname' => 'Ferrer',
@@ -1101,10 +1118,10 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'HRD',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => null
+                'image' => "org-structure/rusky.png",
             ],
             [
-                'pid' => 61,
+                'pid' => 62,
                 'is_active' => true,
                 'firstname' => 'Phillip',
                 'lastname' => 'Clavio',
@@ -1118,7 +1135,7 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'HRD',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => 'org-structure/philip.png'
+                'image' => "org-structure/philip.png",
             ],
             [
                 'pid' => 1,
@@ -1135,10 +1152,10 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'LEG',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => null
+                'image' => "org-structure/bom.png",
             ],
             [
-                'pid' => 66,
+                'pid' => 67,
                 'is_active' => true,
                 'firstname' => 'Ricky Boy',
                 'lastname' => 'Cabatu',
@@ -1152,10 +1169,10 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'LEG',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => 'org-structure/ricky.png'
+                'image' => "org-structure/ricky.png",
             ],
             [
-                'pid' => 66,
+                'pid' => 67,
                 'is_active' => true,
                 'firstname' => 'Kristine Aira',
                 'lastname' => 'Inao',
@@ -1169,10 +1186,10 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'LEG',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => 'org-structure/aira.png'
+                'image' => "org-structure/aira.png",
             ],
             [
-                'pid' => 66,
+                'pid' => 67,
                 'is_active' => true,
                 'firstname' => 'Nica Marsha',
                 'lastname' => 'Gasapo',
@@ -1186,10 +1203,10 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'LEG',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => 'org-structure/nica.png'
+                'image' => "org-structure/nica.png",
             ],
             [
-                'pid' => 69,
+                'pid' => 70,
                 'is_active' => true,
                 'firstname' => 'Neil Kirby',
                 'lastname' => 'Ada',
@@ -1203,10 +1220,10 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'LEG',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => 'org-structure/kirby.png'
+                'image' => "org-structure/kirby.png",
             ],
             [
-                'pid' => 69,
+                'pid' => 67,
                 'is_active' => true,
                 'firstname' => 'Laila',
                 'lastname' => 'Antoniano',
@@ -1214,16 +1231,16 @@ class OrgStructureSeeder extends Seeder
                 'name' => 'Laila Antoniano',
                 'email' => 'lantoniano@megawide.com.ph',
                 'position_title' => 'Paralegal',
-                'reporting' => 'Nica Marsha Gasapo',
+                'reporting' => 'Raymund Jay Gomez',
                 'emp_no' => '61251',
                 'level' => 'Rank & File',
                 'department' => 'LEG',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => 'org-structure/leigasapo.png'
+                'image' => "org-structure/lei.png",
             ],
             [
-                'pid' => 69,
+                'pid' => 67,
                 'is_active' => true,
                 'firstname' => 'Giancharlie',
                 'lastname' => 'Go',
@@ -1237,10 +1254,10 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'LEG',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => 'org-structure/giggy.png'
+                'image' => "org-structure/giggy.png",
             ],
             [
-                'pid' => 72,
+                'pid' => 73,
                 'is_active' => true,
                 'firstname' => 'Janelle Caryn',
                 'lastname' => 'Dela Cruz',
@@ -1254,10 +1271,10 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'LEG',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => 'org-structure/janelle.png'
+                'image' => "org-structure/janelle.png",
             ],
             [
-                'pid' => 66,
+                'pid' => 67,
                 'is_active' => true,
                 'firstname' => 'Niño Jovit',
                 'lastname' => 'Jimenez',
@@ -1271,9 +1288,8 @@ class OrgStructureSeeder extends Seeder
                 'department' => 'LEG',
                 'business_unit' => 'CORP',
                 'company' => 'MEGAWIDE',
-                'image' => 'org-structure/ninojimenez.png'
+                'image' => "org-structure/nino.png",
             ],
-            // ... additional rows from CSV follow the same structure ...
         ];
 
         DB::table('org_structures')->truncate();
