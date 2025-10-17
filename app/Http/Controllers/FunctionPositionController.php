@@ -158,6 +158,7 @@ class FunctionPositionController extends Controller
                             'support' => $param->support ?? null,
                             'consulted' => $param->consulted ?? null,
                             'informed' => $param->informed ?? null,
+                            'updated_at' => $desc && $desc->updated_at ? $desc->updated_at->format('F j, Y \a\t H:i:s') : null,
                         ];
                     }
                     return [

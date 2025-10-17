@@ -50,13 +50,14 @@ class OrgStructureController extends Controller
             'business_unit' => 'sometimes|string|max:255',
             'company' => 'sometimes|string|max:255',
             'department' => 'sometimes|string|max:255',
-            'email' => 'sometimes|email|max:255',
+            'email' => 'sometimes|email|max:255|nullable',
             'emp_no' => 'sometimes|string|max:50|nullable',
             'firstname' => 'sometimes|string|max:100',
             'lastname' => 'sometimes|string|max:100',
             'level' => 'sometimes|string|max:50',
             'nickname' => 'sometimes|string|max:100',
             'position_title' => 'sometimes|string|max:255',
+            'pid' => 'sometimes|nullable|exists:org_structures,id',
         ]);
 
         // Find the org structure entry by ID
@@ -91,6 +92,7 @@ class OrgStructureController extends Controller
             ->selectRaw('COUNT(*) as headcount')
             ->selectRaw('SUM(CASE WHEN firstname = "Employee" THEN 1 ELSE 0 END) as vacant')
             ->selectRaw('COUNT(*) - SUM(CASE WHEN firstname = "Employee" THEN 1 ELSE 0 END) as filled')
+            ->where('name', '!=', 'OCEO')
             ->groupBy('department', 'business_unit')
             ->get();
 
@@ -104,5 +106,62 @@ class OrgStructureController extends Controller
             'data' => $headCount,
             'totals' => $totals,
         ]);
+    }
+
+    public function getCountPerPosition()
+    {
+        $countPerPosition = OrgStructure::select('department', 'business_unit', 'position_title')
+            ->selectRaw('COUNT(*) as headcount')
+            ->selectRaw('SUM(CASE WHEN firstname = "Employee" THEN 1 ELSE 0 END) as vacant')
+            ->selectRaw('COUNT(*) - SUM(CASE WHEN firstname = "Employee" THEN 1 ELSE 0 END) as filled')
+            ->where('name', '!=', 'OCEO')
+            ->groupBy('department', 'business_unit', 'position_title')
+            ->get();
+
+        return response()->json([
+            'data' => $countPerPosition,
+        ]);
+    }
+
+    public function uploadImage(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|exists:org_structures,id',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // max 2MB
+        ]);
+
+        $orgStructure = OrgStructure::find($request->id);
+        if (!$orgStructure) {
+            return response()->json(['message' => 'Organization structure not found'], 404);
+        }
+
+        // Handle the file upload
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $originalName = $file->getClientOriginalName();
+            $extension = $file->getClientOriginalExtension();
+            $filename = time() . '_' . pathinfo($originalName, PATHINFO_FILENAME) . '.' . $extension;
+
+            $storedPath = $file->storeAs('org-structure', $filename, 'public');
+
+            if ($orgStructure->image) {
+                $existing = $orgStructure->image;
+                $existing = preg_replace('#^/storage/#', '', $existing);
+                if (str_starts_with($existing, 'org-structure')) {
+                    try {
+                        \Illuminate\Support\Facades\Storage::disk('public')->delete($existing);
+                    } catch (\Exception $e) {
+                    }
+                }
+            }
+
+            // Save DB path as 'org-structure/filename.ext'
+            $orgStructure->image = $storedPath;
+            $orgStructure->save();
+
+            return response()->json(['message' => 'Image uploaded successfully', 'image_path' => $orgStructure->image]);
+        }
+
+        return response()->json(['message' => 'No image file provided'], 400);
     }
 }
