@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\FunctionPositionController;
 use App\Http\Controllers\OrgStructureController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\MicrosoftAuthController;
@@ -16,11 +17,12 @@ Route::get('/connect', [MicrosoftAuthController::class, 'handleMicrosoftCallback
 
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/function-positions/nested', [FunctionPositionController::class, 'nested']);
+    Route::get('/get-user/{id}', [UserController::class, 'index']);
+    Route::post('/reorder-subfunctions', [FunctionPositionController::class, 'reorderSubfunctions']);
+    Route::post('/reorder-descriptions', [FunctionPositionController::class, 'reorderDescriptions']);
     Route::get('/functions/{id}', [FunctionPositionController::class, 'getFunctionById']);
     Route::get('/subfunctions/{id}', [FunctionPositionController::class, 'getSubFunctionById']);
     Route::post('/manage-function', [FunctionPositionController::class, 'manageFunction']);
-    Route::get('/description/{id}', [FunctionPositionController::class, 'getDescriptionById']);
     Route::post('/manage-description', [FunctionPositionController::class, 'manageDescription']);
     Route::post('/delete-function', [FunctionPositionController::class, 'deleteFunction']);
     Route::get('/organization-structure', [OrgStructureController::class, 'index']);
@@ -32,3 +34,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/get-count-per-position', [OrgStructureController::class, 'getCountPerPosition']);
 });
 
+
+    Route::get('/function-positions/nested', [FunctionPositionController::class, 'nested']);
+    Route::get('/description/{id}', [FunctionPositionController::class, 'getDescriptionById']);

@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class SubfunctionPositionSeeder extends Seeder
 {
@@ -103,6 +104,19 @@ class SubfunctionPositionSeeder extends Seeder
             ['function_position_id' => 12, 'name' => 'IT & Cybersecurity Audit'],
             ['function_position_id' => 12, 'name' => 'Fraud Investigation.'],
         ];
+
+        // Assign an incremental order_id per function_position_id (starts at 1 for each function)
+        $orderCounters = [];
+        foreach ($data as &$item) {
+            $fpId = $item['function_position_id'];
+            if (!isset($orderCounters[$fpId])) {
+                $orderCounters[$fpId] = 1;
+            }
+            $item['order_id'] = $orderCounters[$fpId]++;
+        }
+        unset($item);
+
+        // DB::table('subfunction_positions')->truncate();
 
         foreach ($data as $item) {
             \App\Models\SubfunctionPosition::create($item);

@@ -110,12 +110,12 @@ class OrgStructureController extends Controller
 
     public function getCountPerPosition()
     {
-        $countPerPosition = OrgStructure::select('department', 'business_unit', 'position_title')
+        $countPerPosition = OrgStructure::select('department', 'business_unit', 'level')
             ->selectRaw('COUNT(*) as headcount')
             ->selectRaw('SUM(CASE WHEN firstname = "Employee" THEN 1 ELSE 0 END) as vacant')
             ->selectRaw('COUNT(*) - SUM(CASE WHEN firstname = "Employee" THEN 1 ELSE 0 END) as filled')
             ->where('name', '!=', 'OCEO')
-            ->groupBy('department', 'business_unit', 'position_title')
+            ->groupBy('department', 'business_unit', 'level')
             ->get();
 
         return response()->json([

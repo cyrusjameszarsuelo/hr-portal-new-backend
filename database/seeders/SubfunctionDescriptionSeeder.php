@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class SubfunctionDescriptionSeeder extends Seeder
 {
@@ -270,6 +271,19 @@ class SubfunctionDescriptionSeeder extends Seeder
             // subfunction_position_id 66 (Whistleblower & Fraud Investigation)
             ['subfunction_position_id' => 66, 'description' => "Investigate whistleblower reports, irregularities, or suspected fraud in collaboration with Legal and Human Resources."],
         ];
+
+        // Assign an incremental order_id per subfunction_position_id (starts at 1 for each subfunction)
+        $orderCounters = [];
+        foreach ($data as &$item) {
+            $sfId = $item['subfunction_position_id'];
+            if (!isset($orderCounters[$sfId])) {
+                $orderCounters[$sfId] = 1;
+            }
+            $item['order_id'] = $orderCounters[$sfId]++;
+        }
+        unset($item);
+
+        // DB::table('subfunction_descriptions')->truncate();
 
         foreach ($data as $item) {
             \App\Models\SubfunctionDescription::create($item);

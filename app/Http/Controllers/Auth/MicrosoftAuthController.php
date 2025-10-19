@@ -51,6 +51,7 @@ class MicrosoftAuthController extends Controller
                 // The users table requires a password; generate a random hashed password
                 // since authentication for MS users will be token-based via Sanctum.
                 'password' => Hash::make(Str::random(40)),
+                'job_title' => $microsoftUser->getRaw()['jobTitle'] ?? null,
             ]);
 
             // Create API token (Sanctum)
@@ -62,11 +63,22 @@ class MicrosoftAuthController extends Controller
             }
 
             // Otherwise redirect to frontend with token in querystring
-            return redirect(env('MICROSOFT_REDIRECT_FRONTEND_URI') . "?token={$token}");
+            return redirect(env('MICROSOFT_REDIRECT_FRONTEND_URI') . "?token={$token}&user_id={$user->id}");
         } catch (\Exception $e) {
             // Log the exception for investigation
             Log::error('Microsoft OAuth error', ['message' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
             return response()->json(['error' => 'Unable to authenticate with Microsoft', 'message' => $e->getMessage()], 500);
         }
+    }
+
+    public function logout(Request $request)
+    {
+        $user = $request->user();
+        if ($user) {
+            // Revoke all tokens for the user
+            $user->tokens()->delete();
+        }
+
+        return response()->json(['message' => 'Logged out successfully']);
     }
 }

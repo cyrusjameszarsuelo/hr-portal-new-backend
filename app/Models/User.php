@@ -23,6 +23,7 @@ class User extends Authenticatable
         'email',
         'password',
         'microsoft_id',
+        'job_title',
     ];
 
     /**

@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->string('microsoft_id')->nullable()->after('password');
+            $table->string('job_title')->nullable()->after('microsoft_id');
         });
     }
 

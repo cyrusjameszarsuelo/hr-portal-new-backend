@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class FunctionParameterSeeder extends Seeder
 {
@@ -2024,6 +2025,8 @@ class FunctionParameterSeeder extends Seeder
                     'informed' => 'Concerned Teams, Audit Committee',
                 ],
             ];
+
+        // DB::table('function_parameters')->truncate();
 
         foreach ($data as $item) {
             \App\Models\FunctionParameter::create($item);
