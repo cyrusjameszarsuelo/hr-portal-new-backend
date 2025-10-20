@@ -12,7 +12,7 @@ return new class extends Migration {
     {
         Schema::create('function_parameters', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('subfunction_description_id')->constrained();
+            $table->foreignId('subfunction_position_id')->constrained();
             $table->string('deliverable');
             $table->string('frequency_deliverable');
             $table->string('responsible');
