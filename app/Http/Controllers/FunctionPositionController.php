@@ -12,140 +12,6 @@ use Illuminate\Support\Facades\DB;
 
 class FunctionPositionController extends Controller
 {
-    // public function index()
-    // {
-    //     $functionPositions = FunctionPosition::with([
-    //         'subfunctionPositions' => function ($q) {
-    //             $q->orderBy('order_id');
-    //         },
-    //         'subfunctionPositions.subfunctionDescriptions' => function ($q) {
-    //             $q->whereNull('deleted_at')->orderBy('order_id');
-    //         },
-    //         'subfunctionPositions.functionParameters' => function ($q) {
-    //             $q->whereNull('deleted_at')->orderBy('id');
-    //         },
-    //     ])->orderBy('order_id')->get();
-
-    //     return response()->json($functionPositions);
-    // }
-    // public function tree()
-    // {
-    //     $functionPositions = FunctionPosition::with([
-    //         'subfunctionPositions' => function ($q) {
-    //             $q->orderBy('order_id');
-    //         },
-    //         'subfunctionPositions.subfunctionDescriptions' => function ($q) {
-    //             $q->whereNull('deleted_at')->orderBy('order_id');
-    //         },
-    //         'subfunctionPositions.functionParameters' => function ($q) {
-    //             $q->whereNull('deleted_at')->orderBy('id');
-    //         },
-    //     ])->orderBy('order_id')->get();
-
-    //     $tree = $functionPositions->map(function ($fp) {
-    //         return [
-    //             'expanded' => true,
-    //             'label' => $fp->name,
-    //             'style' => ['borderRadius' => '12px'],
-    //             'children' => $fp->subfunctionPositions->map(function ($sp) use ($fp) {
-    //                 // Build child nodes combining description + matching parameter rows by index.
-    //                 // Assumption: order alignment by array index. If better matching needed, adapt.
-    //                 $descriptions = $sp->subfunctionDescriptions->values();
-    //                 $parameters = $sp->functionParameters->values();
-
-    //                 $leafNodes = [];
-    //                 $max = max($descriptions->count(), $parameters->count());
-    //                 for ($i = 0; $i < $max; $i++) {
-    //                     $desc = $descriptions->get($i);
-    //                     $param = $parameters->get($i);
-
-    //                     // We create a node per description (preferred) or per parameter if description missing.
-    //                     $leafNodes[] = [
-    //                         'node' => $sp->name,
-    //                         'label' => $desc ? $desc->description : ($param ? $param->deliverable : ''),
-    //                         'deliverable' => $param->deliverable ?? null,
-    //                         'frequency_deliverable' => $param->frequency_deliverable ?? null,
-    //                         'responsible' => $param->responsible ?? null,
-    //                         'accountable' => $param->accountable ?? null,
-    //                         'support' => $param->support ?? null,
-    //                         'consulted' => $param->consulted ?? null,
-    //                         'informed' => $param->informed ?? null,
-    //                         'className' => 'bg-teal-500 ',
-    //                         'style' => ['borderRadius' => '12px'],
-    //                     ];
-    //                 }
-
-    //                 return [
-    //                     'expanded' => true,
-    //                     'node' => $fp->name,
-    //                     'label' => $sp->name,
-    //                     'style' => ['borderRadius' => '12px'],
-    //                     'children' => $leafNodes,
-    //                 ];
-    //             })->values(),
-    //         ];
-    //     })->values();
-
-    //     return response()->json($tree);
-    // }
-
-    // public function flat()
-    // {
-    //     $functionPositions = FunctionPosition::with([
-    //         'subfunctionPositions' => function ($q) {
-    //             $q->orderBy('order_id');
-    //         },
-    //         'subfunctionPositions.subfunctionDescriptions' => function ($q) {
-    //             $q->whereNull('deleted_at')->orderBy('order_id');
-    //         },
-    //         'subfunctionPositions.functionParameters' => function ($q) {
-    //             $q->whereNull('deleted_at')->orderBy('id');
-    //         },
-    //     ])->orderBy('order_id')->get();
-
-    //     $result = [];
-    //     $idCounter = 1;
-    //     foreach ($functionPositions as $fp) {
-    //         $fpId = $idCounter++;
-    //         $result[] = [
-    //             'id' => $fpId,
-    //             'name' => $fp->name,
-    //         ];
-
-    //         foreach ($fp->subfunctionPositions as $sp) {
-    //             $spId = $idCounter++;
-    //             $result[] = [
-    //                 'id' => $spId,
-    //                 'pid' => $fpId,
-    //                 'name' => $sp->name,
-    //             ];
-
-    //             $descriptions = $sp->subfunctionDescriptions->values();
-    //             $parameters = $sp->functionParameters->values();
-    //             $max = max($descriptions->count(), $parameters->count());
-    //             for ($i = 0; $i < $max; $i++) {
-    //                 $desc = $descriptions->get($i);
-    //                 $param = $parameters->get($i);
-    //                 $row = [
-    //                     'id' => $idCounter++,
-    //                     'pid' => $spId,
-    //                     'name' => $desc ? $desc->description : ($param ? $param->deliverable : ''),
-    //                 ];
-    //                 if ($param) {
-    //                     $row['deliverable'] = $param->deliverable;
-    //                     $row['frequency_deliverable'] = $param->frequency_deliverable;
-    //                     $row['responsible'] = $param->responsible;
-    //                     $row['accountable'] = $param->accountable;
-    //                     $row['support'] = $param->support;
-    //                     $row['consulted'] = $param->consulted;
-    //                     $row['informed'] = $param->informed;
-    //                 }
-    //                 $result[] = $row;
-    //             }
-    //         }
-    //     }
-    //     return response()->json($result);
-    // }
     /**
      * Return nested structure: label, subfunction, description arrays.
      */
@@ -157,7 +23,8 @@ class FunctionPositionController extends Controller
             },
             'subfunctionPositions.subfunctionDescriptions' => function ($q) {
                 $q->whereNull('deleted_at')->orderBy('order_id');
-            },'subfunctionPositions.functionParameters',
+            },
+            'subfunctionPositions.functionParameters',
         ])->orderBy('order_id')->get();
 
         $result = $functionPositions->map(function ($fp) {
@@ -236,8 +103,9 @@ class FunctionPositionController extends Controller
 
         $parentId = $payload['parent_id'];
         $ordered = $payload['ordered_ids'];
+        $user_id = $request['user_id'];
 
-        DB::transaction(function () use ($parentId, $ordered) {
+        DB::transaction(function () use ($parentId, $ordered, $user_id) {
             foreach ($ordered as $index => $subId) {
                 $sp = SubfunctionPosition::where('id', $subId)
                     ->where('function_position_id', $parentId)
@@ -246,7 +114,7 @@ class FunctionPositionController extends Controller
                     $old = $sp->toArray();
                     $sp->order_id = $index + 1;
                     $sp->save();
-                    auditLog('SubfunctionPosition', 'edit', $old, $sp->toArray());
+                    auditLog('SubfunctionPosition', 'edit', $old, $sp->toArray(), $user_id);
                 }
             }
         });
@@ -286,8 +154,9 @@ class FunctionPositionController extends Controller
 
         $parentId = $payload['parent_id'];
         $ordered = $payload['ordered_ids'];
+        $user_id = $request['user_id'];
 
-        DB::transaction(function () use ($parentId, $ordered) {
+        DB::transaction(function () use ($parentId, $ordered, $user_id) {
             foreach ($ordered as $index => $descId) {
                 $desc = SubfunctionDescription::where('id', $descId)
                     ->where('subfunction_position_id', $parentId)
@@ -296,7 +165,7 @@ class FunctionPositionController extends Controller
                     $old = $desc->toArray();
                     $desc->order_id = $index + 1;
                     $desc->save();
-                    auditLog('SubfunctionDescription', 'edit', $old, $desc->toArray());
+                    auditLog('SubfunctionDescription', 'edit', $old, $desc->toArray(), $user_id);
                 }
             }
         });
@@ -324,6 +193,53 @@ class FunctionPositionController extends Controller
         }
 
         return response()->json($this->buildNestedForFunction($function));
+    }
+
+    /**
+     * Reorder functions (top-level FunctionPosition records).
+     * Expects payload: { ordered_ids: [<function_position_id>, ...] }
+     */
+    public function reorderFunctions(Request $request)
+    {
+        $payload = $request->only(['ordered_ids']);
+
+        if (!is_array($payload['ordered_ids'] ?? null)) {
+            return response()->json(['message' => 'Invalid payload. expected ordered_ids array.'], 400);
+        }
+
+        $ordered = $payload['ordered_ids'];
+        $user_id = $request['user_id'];
+
+        DB::transaction(function () use ($ordered, $user_id) {
+            foreach ($ordered as $index => $funcId) {
+                $fp = FunctionPosition::where('id', $funcId)->first();
+                if ($fp) {
+                    $old = $fp->toArray();
+                    $fp->order_id = $index + 1;
+                    $fp->save();
+                    auditLog('FunctionPosition', 'edit', $old, $fp->toArray(), $user_id);
+                }
+            }
+        });
+
+        // return the full nested data (ordered)
+        $functions = FunctionPosition::with([
+            'subfunctionPositions' => function ($q) {
+                $q->orderBy('order_id');
+            },
+            'subfunctionPositions.subfunctionDescriptions' => function ($q) {
+                $q->whereNull('deleted_at')->orderBy('order_id');
+            },
+            'subfunctionPositions.functionParameters' => function ($q) {
+                $q->whereNull('deleted_at')->orderBy('id');
+            },
+        ])->orderBy('order_id')->get();
+
+        $result = $functions->map(function ($fp) {
+            return $this->buildNestedForFunction($fp);
+        })->values();
+
+        return response()->json($result);
     }
 
     /**
@@ -395,9 +311,9 @@ class FunctionPositionController extends Controller
         }
 
         $oldFunction = $function->exists ? $function->toArray() : null;
-    $function->name = $request->function;
-    $function->save();
-    auditLog('FunctionPosition', $oldFunction ? 'edit' : 'create', $oldFunction, $function->toArray());
+        $function->name = $request->function;
+        $function->save();
+        auditLog('FunctionPosition', $oldFunction ? 'edit' : 'create', $oldFunction, $function->toArray(), $request['user_id']);
 
         $payloadSubfunctionIds = collect($request->subfunctions)->pluck('id')->filter()->all();
 
@@ -414,7 +330,7 @@ class FunctionPositionController extends Controller
             $oldSp = $subfunction->exists ? $subfunction->toArray() : null;
             $subfunction->name = $subfunc['subfunction'];
             $subfunction->save();
-            auditLog('SubfunctionPosition', $oldSp ? 'edit' : 'create', $oldSp, $subfunction->toArray());
+            auditLog('SubfunctionPosition', $oldSp ? 'edit' : 'create', $oldSp, $subfunction->toArray(), $request['user_id']);
 
             $payloadDescIds = collect($subfunc['descriptions'])->pluck('id')->filter()->all();
 
@@ -432,7 +348,7 @@ class FunctionPositionController extends Controller
                 $oldDesc = $subDescription->exists ? $subDescription->toArray() : null;
                 $subDescription->description = $subDesc['description'];
                 $subDescription->save();
-                auditLog('SubfunctionDescription', $oldDesc ? 'edit' : 'create', $oldDesc, $subDescription->toArray());
+                auditLog('SubfunctionDescription', $oldDesc ? 'edit' : 'create', $oldDesc, $subDescription->toArray(), $request['user_id']);
             }
         }
 
@@ -471,34 +387,37 @@ class FunctionPositionController extends Controller
 
         $functionParameter->save();
 
-        auditLog('FunctionParameter', $oldParam ? 'edit' : 'create', $oldParam, $functionParameter->toArray());
+        auditLog('FunctionParameter', $oldParam ? 'edit' : 'create', $oldParam, $functionParameter->toArray(), $request['user_id']);
 
         return response()->json(['message' => 'Function Description saved successfully.']);
     }
 
     public function deleteFunction(Request $request)
     {
+
+        $user_id = $request['user_id'];
+
         if ($request->type === 'function') {
             $function = FunctionPosition::find($request->id);
             if ($function) {
                 $oldFunc = $function->toArray();
-                $function->subfunctionPositions()->each(function ($subfunc) {
-                    $subfunc->subfunctionDescriptions()->each(function ($desc) {
+                $function->subfunctionPositions()->each(function ($subfunc) use ($user_id) {
+                    $subfunc->subfunctionDescriptions()->each(function ($desc) use ($user_id) {
                         $old = $desc->toArray();
                         $desc->delete();
-                        auditLog('SubfunctionDescription', 'delete', $old, null);
+                        auditLog('SubfunctionDescription', 'delete', $old, null, $user_id);
                     });
-                    $subfunc->functionParameters()->each(function ($param) {
+                    $subfunc->functionParameters()->each(function ($param) use ($user_id) {
                         $old = $param->toArray();
                         $param->delete();
-                        auditLog('FunctionParameter', 'delete', $old, null);
+                        auditLog('FunctionParameter', 'delete', $old, null, $user_id);
                     });
                     $oldSub = $subfunc->toArray();
                     $subfunc->delete();
-                    auditLog('SubfunctionPosition', 'delete', $oldSub, null);
+                    auditLog('SubfunctionPosition', 'delete', $oldSub, null, $user_id);
                 });
                 $function->delete();
-                auditLog('FunctionPosition', 'delete', $oldFunc, null);
+                auditLog('FunctionPosition', 'delete', $oldFunc, null, $user_id);
                 return response()->json(['message' => 'Function and its related subfunctions and descriptions deleted successfully.']);
             } else {
                 return response()->json(['message' => 'Function not found.'], 404);
@@ -506,19 +425,19 @@ class FunctionPositionController extends Controller
         } else {
             $subfunction = SubfunctionPosition::find($request->id);
             if ($subfunction) {
-                $subfunction->subfunctionDescriptions()->each(function ($desc) {
+                $subfunction->subfunctionDescriptions()->each(function ($desc) use ($user_id) {
                     $old = $desc->toArray();
                     $desc->delete();
-                    auditLog('SubfunctionDescription', 'delete', $old, null);
+                    auditLog('SubfunctionDescription', 'delete', $old, null, $user_id);
                 });
-                $subfunction->functionParameters()->each(function ($param) {
+                $subfunction->functionParameters()->each(function ($param) use ($user_id) {
                     $old = $param->toArray();
                     $param->delete();
-                    auditLog('FunctionParameter', 'delete', $old, null);
+                    auditLog('FunctionParameter', 'delete', $old, null, $user_id);
                 });
                 $oldSub = $subfunction->toArray();
                 $subfunction->delete();
-                auditLog('SubfunctionPosition', 'delete', $oldSub, null);
+                auditLog('SubfunctionPosition', 'delete', $oldSub, null, $user_id);
                 return response()->json(['message' => 'Subfunction and its related descriptions deleted successfully.']);
             } else {
                 return response()->json(['message' => 'Subfunction not found.'], 404);

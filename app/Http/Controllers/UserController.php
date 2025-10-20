@@ -13,4 +13,17 @@ class UserController extends Controller
 
         return response()->json($user);
     }
+
+    public function logout(string $id)
+    {
+        $user = User::find($id);
+        
+        if ($user) {
+            // Revoke all tokens for the user
+            $user->tokens()->delete();
+        }
+
+        return response()->json(['message' => 'Logged out successfully']);
+
+    }
 }

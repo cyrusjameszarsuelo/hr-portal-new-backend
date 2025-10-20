@@ -70,15 +70,4 @@ class MicrosoftAuthController extends Controller
             return response()->json(['error' => 'Unable to authenticate with Microsoft', 'message' => $e->getMessage()], 500);
         }
     }
-
-    public function logout(Request $request)
-    {
-        $user = $request->user();
-        if ($user) {
-            // Revoke all tokens for the user
-            $user->tokens()->delete();
-        }
-
-        return response()->json(['message' => 'Logged out successfully']);
-    }
 }

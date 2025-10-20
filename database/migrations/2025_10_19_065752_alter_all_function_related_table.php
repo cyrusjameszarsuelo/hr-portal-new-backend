@@ -12,15 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('function_positions', function (Blueprint $table) {
-            $table->string('order_id')->nullable()->after('name');
+            $table->integer('order_id')->nullable()->after('name');
         });
 
         Schema::table('subfunction_positions', function (Blueprint $table) {
-            $table->string('order_id')->nullable()->after('name');
+            $table->integer('order_id')->nullable()->after('name');
         });
 
         Schema::table('subfunction_descriptions', function (Blueprint $table) {
-            $table->string('order_id')->nullable()->after('description');
+            $table->integer('order_id')->nullable()->after('description');
         });
     }
 
