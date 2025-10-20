@@ -217,10 +217,25 @@ class SubfunctionDescriptionSeeder extends Seeder
             ['id' => 232, 'subfunction_position_id' => 57, 'description' => "Consolidate and analyze HR metrics from subsidiaries (turnover, headcount, cost).", 'order_id' => 6],
         ];
 
-        // DB::table('subfunction_descriptions')->truncate();
+        // Defensive seeding: only create descriptions whose parent subfunction_position exists.
+        // This prevents foreign key errors when the positions CSV/migration differs from description data.
+        $existingPositionIds = \App\Models\SubfunctionPosition::pluck('id')->toArray();
 
         foreach ($data as $item) {
-            \App\Models\SubfunctionDescription::create($item);
+            if (!isset($item['subfunction_position_id']) || !in_array($item['subfunction_position_id'], $existingPositionIds, true)) {
+                // skip entries that reference a missing subfunction_position
+                // you can log them or collect for review if needed
+                continue;
+            }
+
+            try {
+                // Use create() which respects any 'id' present in the array
+                \App\Models\SubfunctionDescription::create($item);
+            } catch (\Illuminate\Database\QueryException $e) {
+                // skip problematic rows and continue seeding
+                // optionally: \Log::error('Failed to seed SubfunctionDescription', ['item' => $item, 'error' => $e->getMessage()]);
+                continue;
+            }
         }
     }
 }

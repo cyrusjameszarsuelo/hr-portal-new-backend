@@ -50,12 +50,25 @@ class FunctionParameterSeeder extends Seeder
                 'informed' => $assoc['informed'] ?? null,
             ];
 
-            // require at minimum an id and a deliverable
+            // require at minimum a subfunction_description_id and a deliverable
             if ($item['subfunction_description_id'] === null || $item['deliverable'] === null) {
                 continue;
             }
 
-            \App\Models\FunctionParameter::create($item);
+            // Ensure the referenced subfunction_description exists before inserting to avoid FK violations
+            $exists = \App\Models\SubfunctionDescription::where('id', $item['subfunction_description_id'])->exists();
+            if (!$exists) {
+                // skip rows that reference non-existent descriptions
+                continue;
+            }
+
+            try {
+                \App\Models\FunctionParameter::create($item);
+            } catch (\Illuminate\Database\QueryException $e) {
+                // skip problematic rows and continue seeding
+                // optionally: \Log::error('Failed to seed FunctionParameter', ['item' => $item, 'error' => $e->getMessage()]);
+                continue;
+            }
         }
 
         fclose($handle);

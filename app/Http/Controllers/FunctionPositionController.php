@@ -270,7 +270,9 @@ class FunctionPositionController extends Controller
                 // if the parameter is missing. If you previously relied on parameters
                 // that don't map to descriptions by index, we can add fallback logic.
                 foreach ($descriptions as $desc) {
-                    $param = $desc->functionParameters ?? null;
+                    // functionParameters is now a collection (hasMany). For display
+                    // we use the first parameter if present; otherwise null.
+                    $param = ($desc->functionParameters && $desc->functionParameters->count() > 0) ? $desc->functionParameters->first() : null;
 
                     $label = $desc->description ?: ($param?->deliverable ?: '');
                     $deliverable = $param?->deliverable ?? null;
@@ -426,11 +428,12 @@ class FunctionPositionController extends Controller
                     // delete descriptions and any attached parameters (description->functionParameters)
                     foreach ($subfunc->subfunctionDescriptions as $desc) {
                         $old = $desc->toArray();
-                        // delete parameter linked to this description if exists
-                        if ($desc->functionParameters) {
-                            $oldParam = $desc->functionParameters->toArray();
-                            $desc->functionParameters->delete();
-                            auditLog('FunctionParameter', 'delete', $oldParam, null, $user_id);
+                        // delete parameters linked to this description if any exist
+                        if ($desc->functionParameters && $desc->functionParameters->count() > 0) {
+                            $oldParams = $desc->functionParameters->toArray();
+                            // delete the collection of parameters
+                            $desc->functionParameters()->delete();
+                            auditLog('FunctionParameter', 'delete', $oldParams, null, $user_id);
                         }
                         $desc->delete();
                         auditLog('SubfunctionDescription', 'delete', $old, null, $user_id);
@@ -450,9 +453,9 @@ class FunctionPositionController extends Controller
             $subfunction = SubfunctionPosition::find($request->id);
             if ($subfunction) {
                 foreach ($subfunction->subfunctionDescriptions as $desc) {
-                    if ($desc->functionParameters) {
+                    if ($desc->functionParameters && $desc->functionParameters->count() > 0) {
                         $oldParam = $desc->functionParameters->toArray();
-                        $desc->functionParameters->delete();
+                        $desc->functionParameters()->delete();
                         auditLog('FunctionParameter', 'delete', $oldParam, null, $user_id);
                     }
                     $old = $desc->toArray();
