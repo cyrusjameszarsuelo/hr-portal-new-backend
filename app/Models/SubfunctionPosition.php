@@ -19,9 +19,4 @@ class SubfunctionPosition extends Model
     {
         return $this->hasMany(SubfunctionDescription::class);
     }
-
-    public function functionParameters()
-    {
-        return $this->hasMany(FunctionParameter::class);
-    }
 }

@@ -24,7 +24,8 @@ class FunctionPositionController extends Controller
             'subfunctionPositions.subfunctionDescriptions' => function ($q) {
                 $q->whereNull('deleted_at')->orderBy('order_id');
             },
-            'subfunctionPositions.functionParameters',
+            // ensure parameters are loaded on the description model (hasOne)
+            'subfunctionPositions.subfunctionDescriptions.functionParameters',
         ])->orderBy('order_id')->get();
 
         $result = $functionPositions->map(function ($fp) {
@@ -127,7 +128,8 @@ class FunctionPositionController extends Controller
             'subfunctionPositions.subfunctionDescriptions' => function ($q) {
                 $q->whereNull('deleted_at')->orderBy('order_id');
             },
-            'subfunctionPositions.functionParameters' => function ($q) {
+            // load parameters via description (description hasOne parameter)
+            'subfunctionPositions.subfunctionDescriptions.functionParameters' => function ($q) {
                 $q->whereNull('deleted_at')->orderBy('id');
             },
         ])->find($parentId);
@@ -183,7 +185,7 @@ class FunctionPositionController extends Controller
             'subfunctionPositions.subfunctionDescriptions' => function ($q) {
                 $q->whereNull('deleted_at')->orderBy('order_id');
             },
-            'subfunctionPositions.functionParameters' => function ($q) {
+            'subfunctionPositions.subfunctionDescriptions.functionParameters' => function ($q) {
                 $q->whereNull('deleted_at')->orderBy('id');
             },
         ])->find($subfunction->function_position_id);
@@ -230,7 +232,8 @@ class FunctionPositionController extends Controller
             'subfunctionPositions.subfunctionDescriptions' => function ($q) {
                 $q->whereNull('deleted_at')->orderBy('order_id');
             },
-            'subfunctionPositions.functionParameters' => function ($q) {
+            // load parameters from the description (hasOne)
+            'subfunctionPositions.subfunctionDescriptions.functionParameters' => function ($q) {
                 $q->whereNull('deleted_at')->orderBy('id');
             },
         ])->orderBy('order_id')->get();
@@ -248,25 +251,33 @@ class FunctionPositionController extends Controller
      */
     private function buildNestedForFunction(FunctionPosition $fp)
     {
-        return [
+        // Build a nested structure for the given FunctionPosition.
+        // We iterate subfunctions and for each one we pair descriptions with parameters
+        // by index. If counts differ we still include whichever side exists. Duplicate
+        // rows (based on label+deliverable) are removed while preserving order.
+        $result = [
             'id' => $fp->id,
             'label' => $fp->name,
             'forder_id' => $fp->order_id,
             'subfunction' => $fp->subfunctionPositions->map(function ($sp) use ($fp) {
                 $descriptions = $sp->subfunctionDescriptions->values();
-                $parameters = $sp->functionParameters->values();
-                $max = $descriptions->count();
 
                 $seen = [];
                 $descArr = [];
-                for ($i = 0; $i < $max; $i++) {
-                    $desc = $descriptions->get($i);
-                    $param = $parameters->get($i);
-                    $label = $desc ? $desc->description : ($param ? $param->deliverable : '');
-                    $deliverable = $param->deliverable ?? null;
+
+                // Iterate descriptions directly. Each description may have a single
+                // functionParameter (hasOne). We include rows for descriptions even
+                // if the parameter is missing. If you previously relied on parameters
+                // that don't map to descriptions by index, we can add fallback logic.
+                foreach ($descriptions as $desc) {
+                    $param = $desc->functionParameters ?? null;
+
+                    $label = $desc->description ?: ($param?->deliverable ?: '');
+                    $deliverable = $param?->deliverable ?? null;
+
                     $key = md5($label . '|' . ($deliverable ?? ''));
                     if (isset($seen[$key])) {
-                        continue; // skip duplicate
+                        continue;
                     }
                     $seen[$key] = true;
 
@@ -284,7 +295,7 @@ class FunctionPositionController extends Controller
                         'support' => $param->support ?? null,
                         'consulted' => $param->consulted ?? null,
                         'informed' => $param->informed ?? null,
-                        'updated_at' => $desc && $desc->updated_at ? $desc->updated_at->format('F j, Y \a\t H:i:s') : null,
+                        'updated_at' => ($desc && $desc->updated_at) ? $desc->updated_at->format('F j, Y \\a\\t H:i:s') : null,
                     ];
                 }
 
@@ -297,6 +308,8 @@ class FunctionPositionController extends Controller
                 ];
             })->values(),
         ];
+
+        return $result;
     }
 
     public function manageFunction(Request $request)
@@ -368,10 +381,17 @@ class FunctionPositionController extends Controller
 
     public function manageDescription(Request $request)
     {
+        // load existing parameter or start a new one
         $functionParameter = $request->id ? FunctionParameter::find($request->id) : new FunctionParameter;
 
+        // When creating a new parameter, ensure the request provides the
+        // subfunction_description_id (the FK in the function_parameters table).
         if (!$functionParameter->exists) {
-            $functionParameter->subfunction_position_id = $request->subfunctionId;
+            $subDescId = $request->subfunction_description_id ?? $request->subfunctionId ?? null;
+            if (!$subDescId) {
+                return response()->json(['message' => 'subfunction_description_id is required for creating a FunctionParameter.'], 400);
+            }
+            $functionParameter->subfunction_description_id = $subDescId;
         }
 
         // initialize old param for audit logging
@@ -401,21 +421,25 @@ class FunctionPositionController extends Controller
             $function = FunctionPosition::find($request->id);
             if ($function) {
                 $oldFunc = $function->toArray();
-                $function->subfunctionPositions()->each(function ($subfunc) use ($user_id) {
-                    $subfunc->subfunctionDescriptions()->each(function ($desc) use ($user_id) {
+                // iterate the loaded relation collection, not the query builder
+                foreach ($function->subfunctionPositions as $subfunc) {
+                    // delete descriptions and any attached parameters (description->functionParameters)
+                    foreach ($subfunc->subfunctionDescriptions as $desc) {
                         $old = $desc->toArray();
+                        // delete parameter linked to this description if exists
+                        if ($desc->functionParameters) {
+                            $oldParam = $desc->functionParameters->toArray();
+                            $desc->functionParameters->delete();
+                            auditLog('FunctionParameter', 'delete', $oldParam, null, $user_id);
+                        }
                         $desc->delete();
                         auditLog('SubfunctionDescription', 'delete', $old, null, $user_id);
-                    });
-                    $subfunc->functionParameters()->each(function ($param) use ($user_id) {
-                        $old = $param->toArray();
-                        $param->delete();
-                        auditLog('FunctionParameter', 'delete', $old, null, $user_id);
-                    });
+                    }
+
                     $oldSub = $subfunc->toArray();
                     $subfunc->delete();
                     auditLog('SubfunctionPosition', 'delete', $oldSub, null, $user_id);
-                });
+                }
                 $function->delete();
                 auditLog('FunctionPosition', 'delete', $oldFunc, null, $user_id);
                 return response()->json(['message' => 'Function and its related subfunctions and descriptions deleted successfully.']);
@@ -425,16 +449,16 @@ class FunctionPositionController extends Controller
         } else {
             $subfunction = SubfunctionPosition::find($request->id);
             if ($subfunction) {
-                $subfunction->subfunctionDescriptions()->each(function ($desc) use ($user_id) {
+                foreach ($subfunction->subfunctionDescriptions as $desc) {
+                    if ($desc->functionParameters) {
+                        $oldParam = $desc->functionParameters->toArray();
+                        $desc->functionParameters->delete();
+                        auditLog('FunctionParameter', 'delete', $oldParam, null, $user_id);
+                    }
                     $old = $desc->toArray();
                     $desc->delete();
                     auditLog('SubfunctionDescription', 'delete', $old, null, $user_id);
-                });
-                $subfunction->functionParameters()->each(function ($param) use ($user_id) {
-                    $old = $param->toArray();
-                    $param->delete();
-                    auditLog('FunctionParameter', 'delete', $old, null, $user_id);
-                });
+                }
                 $oldSub = $subfunction->toArray();
                 $subfunction->delete();
                 auditLog('SubfunctionPosition', 'delete', $oldSub, null, $user_id);

@@ -14,18 +14,17 @@ class FunctionPositionSeeder extends Seeder
     public function run(): void
     {
         $data = [
-            ['name' => 'Chief Executive Office', 'order_id' => 1],
-            ['name' => 'Business Process Management', 'order_id' => 2],
-            ['name' => 'Facilities Management', 'order_id' => 3],
-            ['name' => 'Information Technology', 'order_id' => 4],
-            ['name' => 'Business Development', 'order_id' => 5],
-            ['name' => 'Corporate Affairs', 'order_id' => 6],
-            ['name' => 'Corporate Branding', 'order_id' => 7],
-            ['name' => 'Corporate Communications', 'order_id' => 8],
-            ['name' => 'Finance', 'order_id' => 9],
-            ['name' => 'Legal', 'order_id' => 10],
-            ['name' => 'Human Resources', 'order_id' => 11],
-            ['name' => 'Internal Audit', 'order_id' => 12],
+            ['id' => 1, 'name' => 'Chief Executive Office', 'order_id' => 1],
+            ['id' => 2, 'name' => 'Business Process Management', 'order_id' => 2],
+            ['id' => 3, 'name' => 'Facilities Management', 'order_id' => 3],
+            ['id' => 4, 'name' => 'Information Technology', 'order_id' => 4],
+            ['id' => 5, 'name' => 'Business Development', 'order_id' => 5],
+            ['id' => 6, 'name' => 'Corporate Affairs', 'order_id' => 6],
+            ['id' => 8, 'name' => 'Communications & Branding', 'order_id' => 7],
+            ['id' => 9, 'name' => 'Finance', 'order_id' => 8],
+            ['id' => 10, 'name' => 'Legal', 'order_id' => 9],
+            ['id' => 11, 'name' => 'Human Resources', 'order_id' => 10],
+            ['id' => 12, 'name' => 'Internal Audit', 'order_id' => 11],
         ];
 
         // DB::table('function_positions')->truncate();

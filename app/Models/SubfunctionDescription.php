@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class SubfunctionDescription extends Model
 {
     use SoftDeletes;
+
+    public function functionParameters()
+    {
+        return $this->hasOne(FunctionParameter::class);
+    }
 }

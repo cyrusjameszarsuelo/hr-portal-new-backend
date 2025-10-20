@@ -19,10 +19,14 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
-        $this->call(FunctionPositionSeeder::class);
-        $this->call(SubfunctionPositionSeeder::class);
-        $this->call(SubfunctionDescriptionSeeder::class);
-        $this->call(FunctionParameterSeeder::class);
-        $this->call(OrgStructureSeeder::class);
+    // Truncate all related tables safely, then seed parents before children
+    $this->call(TruncateTablesSeeder::class);
+
+    // Seed in parent -> child order
+    $this->call(FunctionPositionSeeder::class);
+    $this->call(SubfunctionPositionSeeder::class);
+    $this->call(SubfunctionDescriptionSeeder::class);
+    $this->call(FunctionParameterSeeder::class);
+        // $this->call(OrgStructureSeeder::class);
     }
 }

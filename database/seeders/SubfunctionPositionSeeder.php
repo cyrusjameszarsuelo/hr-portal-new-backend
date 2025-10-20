@@ -14,110 +14,81 @@ class SubfunctionPositionSeeder extends Seeder
     public function run(): void
     {
         $data = [
-            // function_position_id 1
-            ['function_position_id' => 1, 'name' => 'Strategic Leadership & Vision'],
-            ['function_position_id' => 1, 'name' => 'Executive Committee & SBU Oversight'],
-            ['function_position_id' => 1, 'name' => 'Board & Shareholder Engagement'],
-            ['function_position_id' => 1, 'name' => 'Organizational Culture & Talent Leadership'],
-            ['function_position_id' => 1, 'name' => 'Enterprise Risk Management'],
-            ['function_position_id' => 1, 'name' => 'External Representation & Corporate Positioning'],
+            ['id' => 1, 'function_position_id' => 1, 'name' => 'Strategic Leadership & Vision', 'order_id' => 1],
+            ['id' => 2, 'function_position_id' => 1, 'name' => 'Executive Committee & SBU Oversight', 'order_id' => 2],
+            ['id' => 3, 'function_position_id' => 1, 'name' => 'Board & Shareholder Engagement', 'order_id' => 3],
+            ['id' => 4, 'function_position_id' => 1, 'name' => 'Organizational Culture & Talent Leadership', 'order_id' => 4],
+            ['id' => 5, 'function_position_id' => 1, 'name' => 'Enterprise Risk Management', 'order_id' => 5],
+            ['id' => 6, 'function_position_id' => 1, 'name' => 'Stakeholder Relations', 'order_id' => 6],
 
-            // function_position_id 2
-            ['function_position_id' => 2, 'name' => 'Process Mapping & Documentation'],
-            ['function_position_id' => 2, 'name' => 'Process Improvement & Optimization'],
-            ['function_position_id' => 2, 'name' => 'Process Performance Monitoring & Compliance'],
-            ['function_position_id' => 2, 'name' => 'Process Change Management'],
+            ['id' => 7, 'function_position_id' => 2, 'name' => 'Process Mapping & Documentation', 'order_id' => 1],
+            ['id' => 8, 'function_position_id' => 2, 'name' => 'Process Improvement & Optimization', 'order_id' => 2],
+            ['id' => 9, 'function_position_id' => 2, 'name' => 'Process Performance Monitoring & Compliance', 'order_id' => 3],
+            ['id' => 10, 'function_position_id' => 2, 'name' => 'Process Change Management', 'order_id' => 4],
 
-            // function_position_id 3
-            ['function_position_id' => 3, 'name' => 'Security & Access Coordination'],
-            ['function_position_id' => 3, 'name' => 'Housekeeping Supervision'],
-            ['function_position_id' => 3, 'name' => 'Health, Safety, & Emergency Readiness'],
-            ['function_position_id' => 3, 'name' => 'Facilities Administration'],
-            ['function_position_id' => 3, 'name' => 'Office Maintenance'],
-            ['function_position_id' => 3, 'name' => 'Office Renovation and Upgrades'],
-            ['function_position_id' => 3, 'name' => 'Facilities Vendor Coordination'],
+            ['id' => 11, 'function_position_id' => 3, 'name' => 'Security & Access Control', 'order_id' => 1],
+            ['id' => 12, 'function_position_id' => 3, 'name' => 'Housekeeping', 'order_id' => 2],
+            ['id' => 13, 'function_position_id' => 3, 'name' => 'Health, Safety & Environment', 'order_id' => 3],
+            ['id' => 14, 'function_position_id' => 3, 'name' => 'Facilities Administration', 'order_id' => 4],
+            ['id' => 15, 'function_position_id' => 3, 'name' => 'Office Maintenance', 'order_id' => 5],
+            ['id' => 16, 'function_position_id' => 3, 'name' => 'Office Renovation and Upgrades', 'order_id' => 6],
 
-            // function_position_id 4
-            ['function_position_id' => 4, 'name' => 'Network & Infrastructure'],
-            ['function_position_id' => 4, 'name' => 'Hardware Administration'],
-            ['function_position_id' => 4, 'name' => 'Cybersecurity'],
-            ['function_position_id' => 4, 'name' => 'Software Administration'],
-            ['function_position_id' => 4, 'name' => 'Data Management'],
-            ['function_position_id' => 4, 'name' => 'ERP System Administration (SAP)'],
-            ['function_position_id' => 4, 'name' => 'Software Development'],
+            ['id' => 18, 'function_position_id' => 4, 'name' => 'Network & Infrastructure', 'order_id' => 1],
+            ['id' => 19, 'function_position_id' => 4, 'name' => 'Hardware Administration', 'order_id' => 2],
+            ['id' => 20, 'function_position_id' => 4, 'name' => 'Cybersecurity', 'order_id' => 3],
+            ['id' => 21, 'function_position_id' => 4, 'name' => 'Software Administration', 'order_id' => 4],
+            ['id' => 22, 'function_position_id' => 4, 'name' => 'Data Management', 'order_id' => 5],
+            ['id' => 24, 'function_position_id' => 4, 'name' => 'Software Development', 'order_id' => 6],
 
-            // function_position_id 5
-            ['function_position_id' => 5, 'name' => 'Networking & Lead Generation'],
-            ['function_position_id' => 5, 'name' => 'New Business Evaluation'],
-            ['function_position_id' => 5, 'name' => 'Bid Management & Proposal Submission'],
-            ['function_position_id' => 5, 'name' => 'Business Plan Preparation & Development'],
-            ['function_position_id' => 5, 'name' => 'Business Development Advisory & Consultancy'],
+            ['id' => 25, 'function_position_id' => 5, 'name' => 'Networking & Lead Generation', 'order_id' => 1],
+            ['id' => 26, 'function_position_id' => 5, 'name' => 'New Business Evaluation', 'order_id' => 2],
 
-            // function_position_id 6
-            ['function_position_id' => 6, 'name' => 'Government & Industry Relations'],
-            ['function_position_id' => 6, 'name' => 'Stakeholder Engagement'],
-            ['function_position_id' => 6, 'name' => 'Crisis & Issue Management'],
+            ['id' => 30, 'function_position_id' => 6, 'name' => 'Government & Industry Relations', 'order_id' => 1],
+            ['id' => 32, 'function_position_id' => 6, 'name' => 'Crisis & Issue Management', 'order_id' => 2],
 
-            // function_position_id 7
-            ['function_position_id' => 7, 'name' => 'Brand Strategy & Identity Oversight'],
-            ['function_position_id' => 7, 'name' => 'Brand Governance, Compliance, & Integration'],
-            ['function_position_id' => 7, 'name' => 'Multimedia & Creatives Development'],
-            ['function_position_id' => 7, 'name' => 'Brand Website, Social Media, & Promotions'],
+            ['id' => 37, 'function_position_id' => 8, 'name' => 'Internal Communications', 'order_id' => 1],
+            ['id' => 39, 'function_position_id' => 8, 'name' => 'Media & Public Relations', 'order_id' => 2],
 
-            // function_position_id 8
-            ['function_position_id' => 8, 'name' => 'Internal Communications'],
-            ['function_position_id' => 8, 'name' => 'Media & Public Relations'],
-            ['function_position_id' => 8, 'name' => 'External Communications'],
-            ['function_position_id' => 8, 'name' => 'Executive Support'],
+            ['id' => 41, 'function_position_id' => 9, 'name' => 'Financial & Corporate Planning', 'order_id' => 1],
+            ['id' => 42, 'function_position_id' => 9, 'name' => 'Corporate Finance', 'order_id' => 2],
+            ['id' => 43, 'function_position_id' => 9, 'name' => 'Treasury & Cash Management', 'order_id' => 3],
+            ['id' => 44, 'function_position_id' => 9, 'name' => 'Financial & Accounting Operation', 'order_id' => 4],
+            ['id' => 45, 'function_position_id' => 9, 'name' => 'Tax Planning & Compliance', 'order_id' => 5],
+            ['id' => 46, 'function_position_id' => 9, 'name' => 'Investor Relations', 'order_id' => 6],
 
-            // function_position_id 9
-            ['function_position_id' => 9, 'name' => 'Financial Planning & Analysis'],
-            ['function_position_id' => 9, 'name' => 'Corporate Governance, Corporate Secretarial, & Compliance'],
-            ['function_position_id' => 9, 'name' => 'Treasury & Cash Management'],
-            ['function_position_id' => 9, 'name' => 'Financial & Accounting Operation'],
-            ['function_position_id' => 9, 'name' => 'Tax Compliance & Planning'],
-            ['function_position_id' => 9, 'name' => 'Investor Relations'],
+            ['id' => 47, 'function_position_id' => 10, 'name' => 'Corporate Governance, Corporate Secretarial, & Compliance', 'order_id' => 1],
+            ['id' => 48, 'function_position_id' => 10, 'name' => 'Contracts Review & Advisory', 'order_id' => 2],
+            ['id' => 49, 'function_position_id' => 10, 'name' => 'Litigation', 'order_id' => 3],
+            ['id' => 50, 'function_position_id' => 10, 'name' => 'Mergers, Acquisitions, & Fund Raising Support', 'order_id' => 4],
+            ['id' => 51, 'function_position_id' => 10, 'name' => 'Land Transactions', 'order_id' => 5],
+            ['id' => 52, 'function_position_id' => 10, 'name' => 'Legal Oversight & Audit', 'order_id' => 6],
 
-            // function_position_id 10
-            ['function_position_id' => 10, 'name' => 'Corporate Governance, Corporate Secretarial, & Compliance'],
-            ['function_position_id' => 10, 'name' => 'Contracts Review & Advisory'],
-            ['function_position_id' => 10, 'name' => 'Litigation'],
-            ['function_position_id' => 10, 'name' => 'Mergers, Acquisitions, & Fund Raising Support'],
-            ['function_position_id' => 10, 'name' => 'Land Transactions'],
-            ['function_position_id' => 10, 'name' => 'Legal Oversight & Audit'],
+            ['id' => 53, 'function_position_id' => 11, 'name' => 'Organizational Development', 'order_id' => 1],
+            ['id' => 54, 'function_position_id' => 11, 'name' => 'Executive & Key Talent Acquisition', 'order_id' => 2],
+            ['id' => 55, 'function_position_id' => 11, 'name' => 'Leadership & Talent Development', 'order_id' => 3],
+            ['id' => 57, 'function_position_id' => 11, 'name' => 'HR Operations and Labor Compliance', 'order_id' => 4],
+            ['id' => 59, 'function_position_id' => 11, 'name' => 'Employee Engagement and Culture Building', 'order_id' => 5],
+            ['id' => 61, 'function_position_id' => 11, 'name' => 'HR Oversight', 'order_id' => 6],
+            ['id' => 62, 'function_position_id' => 11, 'name' => 'Office Administration', 'order_id' => 7],
 
-            // function_position_id 11
-            ['function_position_id' => 11, 'name' => 'HR Strategy & Organizational Alignment'],
-            ['function_position_id' => 11, 'name' => 'Executive & Key Talent Acquisition'],
-            ['function_position_id' => 11, 'name' => 'Leadership Development & Succession Planning'],
-            ['function_position_id' => 11, 'name' => 'Performance Management'],
-            ['function_position_id' => 11, 'name' => 'HR and Labor Compliance'],
-            ['function_position_id' => 11, 'name' => 'Learning and Capability Development'],
-            ['function_position_id' => 11, 'name' => 'Employee Engagement and Culture Building'],
-            ['function_position_id' => 11, 'name' => 'HR Analytics & Systems Oversight*'],
-            ['function_position_id' => 11, 'name' => 'HR Advisory & Support'],
-            ['function_position_id' => 11, 'name' => 'Office Administration'],
+            ['id' => 63, 'function_position_id' => 12, 'name' => 'Operational Audit', 'order_id' => 1],
+            ['id' => 64, 'function_position_id' => 12, 'name' => 'Financial & Compliance Audit', 'order_id' => 2],
+            ['id' => 65, 'function_position_id' => 12, 'name' => 'IT & Cybersecurity Audit', 'order_id' => 3],
+            ['id' => 66, 'function_position_id' => 12, 'name' => 'Fraud Investigation', 'order_id' => 4],
 
-            // function_position_id 12
-            ['function_position_id' => 12, 'name' => 'Operational Audit'],
-            ['function_position_id' => 12, 'name' => 'Financial & Compliance Audit'],
-            ['function_position_id' => 12, 'name' => 'IT & Cybersecurity Audit'],
-            ['function_position_id' => 12, 'name' => 'Fraud Investigation.'],
+            ['id' => 67, 'function_position_id' => 8, 'name' => 'Branding Governance', 'order_id' => 3],
+            ['id' => 68, 'function_position_id' => 8, 'name' => 'Social Media & Promotions', 'order_id' => 4],
+            ['id' => 69, 'function_position_id' => 8, 'name' => 'Multimedia & Creative Development', 'order_id' => 5],
+
+            ['id' => 74, 'function_position_id' => 5, 'name' => 'Bid Management', 'order_id' => 3],
+            ['id' => 75, 'function_position_id' => 5, 'name' => 'Development of New Business', 'order_id' => 4],
+
+            ['id' => 76, 'function_position_id' => 8, 'name' => 'Crisis Communication', 'order_id' => 6],
         ];
-
-        // Assign an incremental order_id per function_position_id (starts at 1 for each function)
-        $orderCounters = [];
-        foreach ($data as &$item) {
-            $fpId = $item['function_position_id'];
-            if (!isset($orderCounters[$fpId])) {
-                $orderCounters[$fpId] = 1;
-            }
-            $item['order_id'] = $orderCounters[$fpId]++;
-        }
-        unset($item);
 
         // DB::table('subfunction_positions')->truncate();
 
+        // Insert via Eloquent model preserving CSV order_id
         foreach ($data as $item) {
             \App\Models\SubfunctionPosition::create($item);
         }

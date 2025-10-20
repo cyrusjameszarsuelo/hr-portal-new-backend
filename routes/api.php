@@ -24,7 +24,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/get-user/{id}', [UserController::class, 'index']);
 
     // Function Position Controller
-    Route::get('/function-positions/nested', [FunctionPositionController::class, 'nested']);
     Route::get('/description/{id}', [FunctionPositionController::class, 'getDescriptionById']);
     Route::post('/reorder-functions', [FunctionPositionController::class, 'reorderFunctions']);
     Route::post('/reorder-subfunctions', [FunctionPositionController::class, 'reorderSubfunctions']);
@@ -48,3 +47,5 @@ Route::middleware('auth:sanctum')->group(function () {
     // Audit Log Controller
     Route::get('/audit-logs/{id}', [AuditLogController::class, 'getAuditLogs']);
 });
+
+    Route::get('/function-positions/nested', [FunctionPositionController::class, 'nested']);
