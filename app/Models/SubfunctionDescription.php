@@ -11,8 +11,6 @@ class SubfunctionDescription extends Model
 
     public function functionParameters()
     {
-        // A subfunction description can have multiple function parameters.
-        // Return a hasMany relationship so callers can access all parameters.
-        return $this->hasMany(FunctionParameter::class);
+        return $this->hasOne(FunctionParameter::class);
     }
 }

@@ -24,6 +24,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/get-user/{id}', [UserController::class, 'index']);
 
     // Function Position Controller
+    Route::get('/function-positions/nested', [FunctionPositionController::class, 'nested']);
     Route::get('/description/{id}', [FunctionPositionController::class, 'getDescriptionById']);
     Route::post('/reorder-functions', [FunctionPositionController::class, 'reorderFunctions']);
     Route::post('/reorder-subfunctions', [FunctionPositionController::class, 'reorderSubfunctions']);
@@ -39,13 +40,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/organization-structure/update', [OrgStructureController::class, 'update']);
     Route::delete('/organization-structure/delete/{id}', [OrgStructureController::class, 'destroy']);
     Route::post('/organization-structure/add/{pid}', [OrgStructureController::class, 'store']);
-    Route::post('/upload-image', [OrgStructureController::class, 'uploadImage']);
     Route::get('/get-head-count', [OrgStructureController::class, 'getHeadCount']);
     Route::get('/get-count-per-position', [OrgStructureController::class, 'getCountPerPosition']);
+    Route::post('/upload-image', [OrgStructureController::class, 'uploadImage']);
 
 
     // Audit Log Controller
     Route::get('/audit-logs/{id}', [AuditLogController::class, 'getAuditLogs']);
 });
 
-    Route::get('/function-positions/nested', [FunctionPositionController::class, 'nested']);

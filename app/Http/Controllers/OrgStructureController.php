@@ -86,6 +86,13 @@ class OrgStructureController extends Controller
 
     public function getHeadCount()
     {
+
+        $position_title_order = [
+            'Executive',
+            'Manager',
+            'Rank & File',
+            'Supervisor / Officer'
+        ];
         // Return department and business unit headcounts. Use explicit select with
         // COUNT to avoid ONLY_FULL_GROUP_BY SQL errors on MySQL strict modes.
         $headCount = OrgStructure::select('department', 'business_unit')
@@ -93,6 +100,7 @@ class OrgStructureController extends Controller
             ->selectRaw('SUM(CASE WHEN firstname = "Employee" THEN 1 ELSE 0 END) as vacant')
             ->selectRaw('COUNT(*) - SUM(CASE WHEN firstname = "Employee" THEN 1 ELSE 0 END) as filled')
             ->where('name', '!=', 'OCEO')
+            ->orderByRaw('FIELD(level, ?, ?, ?, ?)', $position_title_order)
             ->groupBy('department', 'business_unit')
             ->get();
 
@@ -110,12 +118,24 @@ class OrgStructureController extends Controller
 
     public function getCountPerPosition()
     {
+
+        $level_order = [
+            'Executive',
+            'Manager',
+            'Supervisor / Officer',
+            'Rank & File',
+        ];
+
         $countPerPosition = OrgStructure::select('department', 'business_unit', 'level')
             ->selectRaw('COUNT(*) as headcount')
             ->selectRaw('SUM(CASE WHEN firstname = "Employee" THEN 1 ELSE 0 END) as vacant')
             ->selectRaw('COUNT(*) - SUM(CASE WHEN firstname = "Employee" THEN 1 ELSE 0 END) as filled')
             ->where('name', '!=', 'OCEO')
             ->groupBy('department', 'business_unit', 'level')
+            // Order groups by department, business_unit and then by custom level order
+            ->orderBy('department')
+            ->orderBy('business_unit')
+            ->orderByRaw('FIELD(level, ?, ?, ?, ?)', $level_order)
             ->get();
 
         return response()->json([
