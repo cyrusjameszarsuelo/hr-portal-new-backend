@@ -13,4 +13,14 @@ class AuditTrail extends Model
         'new_data',
         'action',
     ];
+
+    protected $casts = [
+        'old_data' => 'array',
+        'new_data' => 'array',
+    ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }
