@@ -184,4 +184,11 @@ class OrgStructureController extends Controller
 
         return response()->json(['message' => 'No image file provided'], 400);
     }
+
+    public function userProfile(string $email) 
+    {
+        $orgStructure = OrgStructure::where('email', $email)->first();
+
+        return response()->json($orgStructure);
+    }
 }

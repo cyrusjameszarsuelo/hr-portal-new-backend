@@ -43,6 +43,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/get-head-count', [OrgStructureController::class, 'getHeadCount']);
     Route::get('/get-count-per-position', [OrgStructureController::class, 'getCountPerPosition']);
     Route::post('/upload-image', [OrgStructureController::class, 'uploadImage']);
+    Route::get('/user-profile/{email}', [OrgStructureController::class, 'userProfile']);
 
 
     // Audit Log Controller
