@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
 use App\Models\User;
+use App\Models\OrgStructure;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -50,9 +51,16 @@ class MicrosoftAuthController extends Controller
                 'microsoft_id' => $microsoftUser->getId(),
                 // The users table requires a password; generate a random hashed password
                 // since authentication for MS users will be token-based via Sanctum.
-                'password' => Hash::make(Str::random(40)),
-                'job_title' => $microsoftUser->getRaw()['jobTitle'] ?? null,
+                // 'password' => Hash::make(Str::random(40)),
+                'job_title' => $microsoftUser->user['jobTitle'] ?? null,
+                'last_login_at' => now(),
             ]);
+
+            // Link user to org structure if a matching record exists by email
+            $orgStructure = OrgStructure::where('email', $user->email)->first();
+            if ($orgStructure && !$orgStructure->user_id) {
+                $orgStructure->update(['user_id' => $user->id]);
+            }
 
             // Create API token (Sanctum)
             $token = $user->createToken('authToken')->plainTextToken;

@@ -11,11 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('subfunction_positions', function (Blueprint $table) {
+        Schema::create('jp_reporting_relationships', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('function_position_id')->constrained()->cascadeOnDelete();
-            $table->string('name');
-            $table->integer('order_id')->nullable();
+            $table->foreignId('job_profile_id')->constrained('jp_profiles')->cascadeOnDelete();
+            // Nullable FKs to org_structures for reporting lines
+            $table->string('primary')->nullable();
+            $table->string('secondary')->nullable();
+            $table->string('tertiary')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -26,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('subfunction_positions');
+    Schema::dropIfExists('jp_reporting_relationships');
     }
 };

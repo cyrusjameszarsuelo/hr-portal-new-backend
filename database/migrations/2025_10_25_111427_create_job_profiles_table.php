@@ -10,14 +10,14 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('audit_trails', function (Blueprint $table) {
+        Schema::create('jp_profiles', function (Blueprint $table) {
             $table->id();
-            $table->string('module')->index();
-            $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
-            $table->longText('old_data')->nullable();
-            $table->longText('new_data')->nullable();
-            $table->string('action')->index();
+            $table->foreignId('org_structure_id')->constrained()->cascadeOnDelete();
+            $table->unique('org_structure_id');
+            $table->foreignId('reporting_to')->nullable()->constrained('org_structures')->nullOnDelete();
+            $table->text('job_purpose');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -26,6 +26,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('audit_trails');
+    Schema::dropIfExists('jp_profiles');
     }
 };

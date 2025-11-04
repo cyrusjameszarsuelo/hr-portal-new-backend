@@ -15,7 +15,7 @@ class OrgStructureController extends Controller
         return response()->json($orgStructure);
     }
 
-    public function store($pid)
+    public function store(Request $request, $pid)
     {
         $newEntry = OrgStructure::create([
             'is_active' => true,
@@ -34,6 +34,8 @@ class OrgStructureController extends Controller
             'business_unit' => 'N/A',
             'image' => '',
         ]);
+
+        auditLog('OrgStructure', 'create', null, $newEntry->toArray(), $request['user_id']);
 
         return response()->json(['message' => 'New organization structure entry added', 'data' => $newEntry]);
     }
@@ -63,15 +65,19 @@ class OrgStructureController extends Controller
         // Find the org structure entry by ID
         $orgStructure = OrgStructure::find($validatedData['id']);
 
+        $oldOrgStructure = $orgStructure->toArray();
+
         $orgStructure->fill($validatedData);
 
         // Save the updated org structure
         $orgStructure->save();
 
+        auditLog('OrgStructure', 'edit', $oldOrgStructure, $orgStructure->toArray(), $request['user_id']);
+
         return response()->json(['message' => 'Organization structure updated successfully', 'data' => $validatedData]);
     }
 
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         $orgStructure = OrgStructure::find($id);
 
@@ -79,7 +85,11 @@ class OrgStructureController extends Controller
             return response()->json(['message' => 'Organization structure not found'], 404);
         }
 
+        $oldOrgStructure = $orgStructure->toArray();
+
         $orgStructure->delete();
+
+        auditLog('OrgStructure', 'delete', $oldOrgStructure, null, $request['user_id']);
 
         return response()->json(['message' => 'Organization structure deleted successfully']);
     }
@@ -155,6 +165,8 @@ class OrgStructureController extends Controller
             return response()->json(['message' => 'Organization structure not found'], 404);
         }
 
+        $oldOrgStructure = $orgStructure->toArray();
+
         // Handle the file upload
         if ($request->hasFile('image')) {
             $file = $request->file('image');
@@ -179,16 +191,33 @@ class OrgStructureController extends Controller
             $orgStructure->image = $storedPath;
             $orgStructure->save();
 
+            auditLog('OrgStructure', 'edit', $oldOrgStructure, $orgStructure->toArray(), $request['user_id']);
+
             return response()->json(['message' => 'Image uploaded successfully', 'image_path' => $orgStructure->image]);
         }
 
         return response()->json(['message' => 'No image file provided'], 400);
     }
 
-    public function userProfile(string $email) 
+    public function userProfile(string $email)
     {
         $orgStructure = OrgStructure::where('email', $email)->first();
 
         return response()->json($orgStructure);
+    }
+
+    public function teamMembers(string $id)
+    {
+        $user = OrgStructure::find($id);
+
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+
+        $teamMembers = OrgStructure::where('pid', $user->id)
+            ->where('id', '!=', 2)
+            ->get();
+
+        return response()->json($teamMembers);
     }
 }

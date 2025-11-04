@@ -4,18 +4,19 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        Schema::create('subfunction_positions', function (Blueprint $table) {
+        Schema::create('job_profile_kras', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('function_position_id')->constrained()->cascadeOnDelete();
-            $table->string('name');
-            $table->integer('order_id')->nullable();
+            $table->foreignId('subfunction_position_id')->nullable()->constrained();
+            $table->string('department');
+            $table->string('business_unit');
+            $table->string('kra');
+            $table->text('kra_description')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -26,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('subfunction_positions');
+        Schema::dropIfExists('job_profile_kras');
     }
 };

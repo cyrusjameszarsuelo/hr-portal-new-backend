@@ -1292,7 +1292,7 @@ class OrgStructureSeeder extends Seeder
             ],
         ];
 
-        DB::table('org_structures')->truncate();
+        // DB::table('org_structures')->truncate();
 
         foreach ($data as $item) {
             \App\Models\OrgStructure::create($item);

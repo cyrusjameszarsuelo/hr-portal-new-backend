@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('subfunction_descriptions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('subfunction_position_id')->constrained();
+            $table->foreignId('subfunction_position_id')->constrained()->cascadeOnDelete();
             $table->text('description');
+            $table->integer('order_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

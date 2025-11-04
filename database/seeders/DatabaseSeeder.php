@@ -20,13 +20,14 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
         // Truncate all related tables safely, then seed parents before children
-        $this->call(TruncateTablesSeeder::class);
+        // $this->call(TruncateTablesSeeder::class);
 
-        // Seed in parent -> child order
-        $this->call(FunctionPositionSeeder::class);
-        $this->call(SubfunctionPositionSeeder::class);
-        $this->call(SubfunctionDescriptionSeeder::class);
-        $this->call(FunctionParameterSeeder::class);
+        // // Seed in parent -> child order
+        // $this->call(FunctionPositionSeeder::class);
+        // $this->call(SubfunctionPositionSeeder::class);
+        // $this->call(SubfunctionDescriptionSeeder::class);
+        // $this->call(FunctionParameterSeeder::class);
         // $this->call(OrgStructureSeeder::class);
+        $this->call(JobProfileKraSeeder::class);
     }
 }

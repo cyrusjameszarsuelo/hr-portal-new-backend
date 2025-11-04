@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('subfunction_positions', function (Blueprint $table) {
+        Schema::create('jp_description_kras', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('function_position_id')->constrained()->cascadeOnDelete();
-            $table->string('name');
-            $table->integer('order_id')->nullable();
+            $table->foreignId('job_description_id')->constrained('jp_descriptions')->cascadeOnDelete();
+            $table->text('kra_description');
+            $table->text('deliverables');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('subfunction_positions');
+    Schema::dropIfExists('jp_description_kras');
     }
 };

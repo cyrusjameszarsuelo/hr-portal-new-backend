@@ -9,7 +9,7 @@ class SubfunctionPosition extends Model
 {
 
     use SoftDeletes;
-    
+
     public function functionPosition()
     {
         return $this->belongsTo(FunctionPosition::class);
@@ -18,5 +18,10 @@ class SubfunctionPosition extends Model
     public function subfunctionDescriptions()
     {
         return $this->hasMany(SubfunctionDescription::class);
+    }
+
+    public function jobProfileKras()
+    {
+        return $this->hasMany(JobProfileKra::class);
     }
 }

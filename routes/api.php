@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\FunctionPositionController;
+use App\Http\Controllers\MyProfileController;
+use App\Http\Controllers\AboutController;
 use App\Http\Controllers\OrgStructureController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
@@ -34,9 +36,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/manage-function', [FunctionPositionController::class, 'manageFunction']);
     Route::post('/manage-description', [FunctionPositionController::class, 'manageDescription']);
     Route::post('/delete-function', [FunctionPositionController::class, 'deleteFunction']);
+    Route::get('/subfunction-dept/{dept}', [FunctionPositionController::class, 'getSubfunctionDept']);
 
     // Organization Structure Controller
-    Route::get('/organization-structure', [OrgStructureController::class, 'index']);
     Route::put('/organization-structure/update', [OrgStructureController::class, 'update']);
     Route::delete('/organization-structure/delete/{id}', [OrgStructureController::class, 'destroy']);
     Route::post('/organization-structure/add/{pid}', [OrgStructureController::class, 'store']);
@@ -44,9 +46,25 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/get-count-per-position', [OrgStructureController::class, 'getCountPerPosition']);
     Route::post('/upload-image', [OrgStructureController::class, 'uploadImage']);
     Route::get('/user-profile/{email}', [OrgStructureController::class, 'userProfile']);
-
+    Route::get('/team-members/{email}', [OrgStructureController::class, 'teamMembers']);
 
     // Audit Log Controller
-    Route::get('/audit-logs', [AuditLogController::class, 'getAuditLogs']);
+    Route::get('/functional-audit-logs', [AuditLogController::class, 'getFunctionalAuditLogs']);
+    Route::get('/org-structure-audit-logs', [AuditLogController::class, 'getOrgStructureAuditLogs']);
+
+    // My Profile Controller
+    Route::post('/my-profile/store', [MyProfileController::class, 'store']);
+    Route::get('/my-profile/download-pdf/{id}', [MyProfileController::class, 'exportPdf']);
+    Route::get('/my-profile/edit/{id}', [MyProfileController::class, 'edit']);
+
+    // About Controller (About Us Tab)
+    Route::post('/about/upsert', [AboutController::class, 'upsert']);
+    // Route::delete('/about/{org_structure_id}', [AboutController::class, 'destroyByProfileId']);
+    Route::get('/about/edit/{id}', [AboutController::class, 'edit']);
 });
 
+    Route::get('/about/{id}', [AboutController::class, 'showByProfileId']);
+    Route::get('/my-profile/{id}', [MyProfileController::class, 'show']);
+
+
+    Route::get('/organization-structure', [OrgStructureController::class, 'index']);

@@ -20,7 +20,7 @@ return new class extends Migration {
             $table->string('email')->nullable();
             $table->string('position_title');
             $table->string('reporting');
-            $table->integer('pid')->nullable();
+            $table->unsignedBigInteger('pid')->nullable();
             $table->string('emp_no')->nullable();
             $table->string('level');
             $table->string('department');

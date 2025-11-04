@@ -90,6 +90,19 @@ class FunctionPositionController extends Controller
         return response()->json($result);
     }
 
+    public function getSubfunctionDept(string $dept)
+    {
+        $subfunctions = SubfunctionPosition::with('jobProfileKras')
+            ->whereHas('jobProfileKras', function ($query) use ($dept) {
+                $query->where('department', $dept)
+                      ->orWhere('department', 'Standard');
+            })
+            ->orderBy('order_id')
+            ->get();
+
+        return response()->json($subfunctions);
+    }
+
     /**
      * Reorder subfunctions for a given parent (function position).
      * Expects payload: { parent_id: <function_position_id>, ordered_ids: [<subfunction_id>, ...] }

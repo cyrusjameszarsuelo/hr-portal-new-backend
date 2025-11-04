@@ -11,12 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('function_positions', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->integer('order_id')->nullable();
-            $table->timestamps();
-            $table->softDeletes();
+        Schema::table('org_structures', function (Blueprint $table) {
+            $table->boolean('dept_head')->default(0)->after('level');
+            $table->boolean('is_admin')->default(0)->after('dept_head');
         });
     }
 
@@ -25,6 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('function_positions');
+        Schema::table('org_structures', function (Blueprint $table) {
+            $table->dropColumn(['dept_head', 'is_admin']);
+        });
     }
 };

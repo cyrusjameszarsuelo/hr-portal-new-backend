@@ -12,14 +12,14 @@ return new class extends Migration {
     {
         Schema::create('function_parameters', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('subfunction_position_id')->constrained();
+            $table->foreignId('subfunction_description_id')->nullable()->constrained('subfunction_descriptions')->cascadeOnDelete();
             $table->string('deliverable');
             $table->string('frequency_deliverable');
             $table->string('responsible');
             $table->string('accountable');
-            $table->string('support');
-            $table->string('consulted');
-            $table->string('informed');
+            $table->string('support')->nullable();
+            $table->string('consulted')->nullable();
+            $table->string('informed')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
