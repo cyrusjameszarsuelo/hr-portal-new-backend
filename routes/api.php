@@ -38,6 +38,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/manage-description', [FunctionPositionController::class, 'manageDescription']);
     Route::post('/delete-function', [FunctionPositionController::class, 'deleteFunction']);
     Route::get('/function-positions', [FunctionPositionController::class, 'index']);
+    Route::get('/subfunction-dept/{dept}/{position?}', [FunctionPositionController::class, 'getSubfunctionDept']);
 
     // Organization Structure Controller
     Route::put('/organization-structure/update', [OrgStructureController::class, 'update']);
@@ -48,6 +49,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user-profile/{email}', [OrgStructureController::class, 'userProfile']);
     Route::get('/team-members/{id}', [OrgStructureController::class, 'teamMembers']);
     Route::get('/organization-structure', [OrgStructureController::class, 'index']);
+    Route::get('/indirect-reporting/{id}', [OrgStructureController::class, 'indirectReporting']);
+    Route::get('/get-head-count', [OrgStructureController::class, 'getHeadCount']);
 
     // Audit Log Controller
     Route::get('/functional-audit-logs', [AuditLogController::class, 'getFunctionalAuditLogs']);
@@ -56,6 +59,8 @@ Route::middleware('auth:sanctum')->group(function () {
     // My Profile Controller
     Route::post('/my-profile/store', [MyProfileController::class, 'store']);
     Route::get('/my-profile/download-pdf/{id}', [MyProfileController::class, 'exportPdf']);
+    Route::get('/my-profile/{id}', [MyProfileController::class, 'show']);
+    Route::get('/my-profile/edit/{id}', [MyProfileController::class, 'edit']);
 
     // About Controller (About Us Tab)
     Route::post('/about/upsert', [AboutController::class, 'upsert']);
@@ -67,9 +72,4 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('/position-titles', PositionTitleController::class);
 });
 
-    Route::get('/my-profile/{id}', [MyProfileController::class, 'show']);
-    Route::get('/indirect-reporting/{id}', [OrgStructureController::class, 'indirectReporting']);
-    Route::get('/get-head-count', [OrgStructureController::class, 'getHeadCount']);
-    Route::get('/my-profile/edit/{id}', [MyProfileController::class, 'edit']);
-    Route::get('/subfunction-dept/{dept}/{position?}', [FunctionPositionController::class, 'getSubfunctionDept']);
 
