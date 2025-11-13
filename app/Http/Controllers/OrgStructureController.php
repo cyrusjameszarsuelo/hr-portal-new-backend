@@ -220,4 +220,45 @@ class OrgStructureController extends Controller
 
         return response()->json($teamMembers);
     }
+
+    public function indirectReporting(string $id)
+    {
+        // get all users who indirectly report to the user with the given id
+        $user = OrgStructure::find($id);
+
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+
+        // Get all indirect reports recursively
+        $indirectReports = $this->getIndirectReports($user->id);
+
+        return response()->json($indirectReports);
+    }
+
+    /**
+     * Recursively get all indirect reports for a given user
+     */
+    private function getIndirectReports($userId, $excludeFirstLevel = true)
+    {
+        $allReports = collect();
+
+        // Get direct reports (children)
+        $directReports = OrgStructure::where('pid', $userId)
+            ->where('id', '!=', 2) // Exclude specific ID if needed
+            ->get();
+
+        foreach ($directReports as $report) {
+            // Skip adding direct reports on first level
+            if (!$excludeFirstLevel) {
+                $allReports->push($report);
+            }
+
+            // Recursively get their reports (indirect) - always include these
+            $indirectReports = $this->getIndirectReports($report->id, false);
+            $allReports = $allReports->merge($indirectReports);
+        }
+
+        return $allReports;
+    }
 }

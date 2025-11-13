@@ -12,12 +12,23 @@ class LicAndCert extends Model
     protected $table = 'a_lic_and_certs';
 
     protected $fillable = [
-        'a_educ_prof_background_id',
-        'lic_and_cert',
+        'a_about_id',
+        'license_certification_name',
+        'issuing_organization',
+        'license_certification_number',
+        'date_issued',
+        'date_of_expiration',
+        'non_expiring',
     ];
 
-    public function educProfBackground()
+    protected $casts = [
+        'date_issued' => 'date',
+        'date_of_expiration' => 'date',
+        'non_expiring' => 'boolean',
+    ];
+
+    public function about()
     {
-        return $this->belongsTo(EducProfBackground::class, 'a_educ_prof_background_id');
+        return $this->belongsTo(About::class, 'a_about_id');
     }
 }

@@ -15,6 +15,12 @@ class FunctionPositionController extends Controller
     /**
      * Return nested structure: label, subfunction, description arrays.
      */
+    public function index()
+    {
+        $functionPositions = FunctionPosition::orderBy('order_id')->get();
+        return response()->json($functionPositions);
+    }
+
     public function nested()
     {
         $functionPositions = FunctionPosition::with([
@@ -90,12 +96,15 @@ class FunctionPositionController extends Controller
         return response()->json($result);
     }
 
-    public function getSubfunctionDept(string $dept)
+    public function getSubfunctionDept(string $dept, string $position)
     {
-        $subfunctions = SubfunctionPosition::with('jobProfileKras')
-            ->whereHas('jobProfileKras', function ($query) use ($dept) {
-                $query->where('department', $dept)
-                      ->orWhere('department', 'Standard');
+        $subfunctions = SubfunctionPosition::with(['jobProfileKras' => function ($q) use ($dept, $position) {
+                $q->where('department', 'LIKE', $dept)
+                  ->where('roles', 'LIKE', "%$position%");
+            }])
+            ->whereHas('jobProfileKras', function ($query) use ($dept, $position) {
+                $query->where('department', 'LIKE', $dept)
+                      ->where('roles', 'LIKE', "%$position%");
             })
             ->orderBy('order_id')
             ->get();

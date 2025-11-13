@@ -12,14 +12,34 @@ class MegawideWorkExperience extends Model
 
     protected $fillable = [
         'a_about_id',
-        'position',
+        'job_title',
         'department',
-        'rank',
-        'start_date',
+        'unit',
+        'job_level',
+        'employment_status',
+        'current_role_start_date',
+        'current_role_end_date',
+        'is_current',
+    ];
+
+    protected $casts = [
+        'current_role_start_date' => 'date',
+        'current_role_end_date' => 'date',
+        'is_current' => 'boolean',
     ];
 
     public function about()
     {
         return $this->belongsTo(About::class, 'a_about_id');
+    }
+
+    public function previousAssignments()
+    {
+        return $this->hasMany(MegawidePreviousAssignment::class, 'megawide_work_experience_id');
+    }
+
+    public function subfunctionPositions()
+    {
+        return $this->belongsToMany(SubfunctionPosition::class, 'a_megawide_work_experience_function', 'megawide_work_experience_id', 'subfunction_position_id')->withTimestamps();
     }
 }

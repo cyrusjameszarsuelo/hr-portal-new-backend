@@ -11,6 +11,8 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('org_structures', function (Blueprint $table) {
+            $table->dropColumn(['pid']);
+            $table->unsignedBigInteger('pid')->nullable();
             $table->foreign('pid')->references('id')->on('org_structures')->nullOnDelete();
             $table->foreignId('user_id')->nullable()->after('pid')->constrained('users')->nullOnDelete();
             $table->index('email');

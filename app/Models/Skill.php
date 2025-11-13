@@ -5,19 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class PrevWorkExperience extends Model
+class Skill extends Model
 {
     use SoftDeletes;
 
-    protected $table = 'a_prev_work_experiences';
+    protected $table = 'a_skills';
 
     protected $fillable = [
         'a_about_id',
-        'company',
-        'job_title',
-        'job_level',
-        'start_date',
-        'end_date',
+        'skill',
     ];
 
     public function about()

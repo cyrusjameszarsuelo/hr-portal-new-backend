@@ -10,21 +10,26 @@ return new class extends Migration {
         Schema::create('a_educ_prof_backgrounds', function (Blueprint $table) {
             $table->id();
             $table->foreignId('a_about_id')->constrained('a_abouts')->cascadeOnDelete();
-            $table->enum('education_level', [
-                'primary',
-                'secondary',
-                'tertiary',
-                'vocational',
-                'undergraduate',
-                'bachelors',
-                'masters',
-                'doctorate'
-            ])->nullable();
-            $table->string('school')->nullable();
-            $table->string('course')->nullable();
-            $table->date('start_date')->nullable();
-            $table->date('end_date')->nullable();
-            $table->text('honors')->nullable();
+            
+            // Educational Level (e.g., High School, Undergraduate, Graduate School, etc.)
+            $table->string('education_level')->nullable();
+            
+            // School/University Attended
+            $table->string('school_attended')->nullable();
+            
+            // Degree/Program/Course
+            $table->string('degree_program_course')->nullable();
+            
+            // Academic Achievements / Extracurricular Distinctions
+            $table->text('academic_achievements')->nullable();
+            
+            // Year Started and Year Ended
+            $table->string('year_started')->nullable();
+            $table->string('year_ended')->nullable();
+            
+            // Currently studying flag
+            $table->boolean('is_current')->default(false);
+            
             $table->timestamps();
             $table->softDeletes();
         });

@@ -11,6 +11,7 @@ use App\Models\OrgStructure;
 use App\Models\ProfileKra;
 use App\Models\ReportingRelationship;
 use App\Models\SubfunctionPosition;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 
@@ -215,11 +216,11 @@ class MyProfileController extends Controller
                     'items' => [
                         [
                             'name' => 'Line Authority',
-                            'values' => $this->parseSpecificationValue($levels['line_authority'] ?? '')
+                            'values' => $this->parseLineAuthority($levels['line_authority'] ?? '')
                         ],
                         [
                             'name' => 'Staff Authority',
-                            'values' => $this->parseSpecificationValue($levels['staff_authority'] ?? '')
+                            'values' => $this->parseLineAuthority($levels['staff_authority'] ?? '')
                         ],
                     ]
                 ];
@@ -273,6 +274,26 @@ class MyProfileController extends Controller
         return [$value];
     }
 
+    /**
+     * Parse line authority specifically (comma-separated OR JSON array OR single string)
+     */
+    private function parseLineAuthority($value)
+    {
+        if ($value === null || trim($value) === '') {
+            return [];
+        }
+        $decoded = json_decode($value, true);
+        if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+            return $decoded;
+        }
+        if (strpos($value, ',') !== false) {
+            $parts = array_map('trim', explode(',', $value));
+            $parts = array_values(array_filter($parts, function ($p) { return $p !== ''; }));
+            return $parts;
+        }
+        return [$value];
+    }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -295,12 +316,14 @@ class MyProfileController extends Controller
             'levels_of_authority.staff_authority' => 'sometimes|nullable|string',
             // job_specifications object
             'job_specifications' => 'sometimes|array',
-            'job_specifications.educational_background' => 'sometimes|nullable|string',
-            'job_specifications.license_requirement' => 'sometimes|nullable|string',
-            'job_specifications.work_experience' => 'sometimes|nullable|string',
+            'job_specifications.educational_background' => 'sometimes|array',
+            'job_specifications.license_requirement' => 'sometimes|array',
+            'job_specifications.work_experience' => 'sometimes|array',
             // job_descriptions array with nested subfunction and profile_kra
             'job_descriptions' => 'sometimes|array',
-            'job_descriptions.*.id' => 'sometimes|exists:job_descriptions,id',
+            // NOTE: table name is jp_descriptions (not job_descriptions)
+            'job_descriptions.*.id' => 'sometimes|exists:jp_descriptions,id',
+            // kra is numeric id referencing job_profile_kras (keep exists) or relax if needed
             'job_descriptions.*.kra' => 'required|exists:job_profile_kras,id',
             'job_descriptions.*.description' => 'required|string',
             'job_descriptions.*.subfunction' => 'nullable|array',
@@ -311,7 +334,7 @@ class MyProfileController extends Controller
             'job_descriptions.*.profile_kra.*.description' => 'required|string',
         ]);
 
-        $org_structure = OrgStructure::find($request->input('org_structure_id'));
+        $reporting_to = OrgStructure::find($request->input('reporting_to'));
 
         // Find existing profile or create new
         $job_profile = JobProfile::where('org_structure_id', $request->input('org_structure_id'))->first();
@@ -323,7 +346,7 @@ class MyProfileController extends Controller
         }
 
         $job_profile->org_structure_id = $request->input('org_structure_id');
-        $job_profile->reporting_to = $org_structure->id;
+        $job_profile->reporting_to = $reporting_to?->id;
         $job_profile->job_purpose = $request->input('job_purpose');
         $job_profile->save();
 
@@ -635,9 +658,9 @@ class MyProfileController extends Controller
         $js = null;
         if ($jp && $jp->jobSpecifications) {
             $js = [
-                'educational_background' => $this->firstOrString($jp->jobSpecifications->educational_background),
-                'license_requirement' => $this->firstOrString($jp->jobSpecifications->license_requirement),
-                'work_experience' => $this->firstOrString($jp->jobSpecifications->work_experience),
+                'educational_background' => json_decode($jp->jobSpecifications->educational_background),
+                'license_requirement' => json_decode($jp->jobSpecifications->license_requirement),
+                'work_experience' => json_decode($jp->jobSpecifications->work_experience),
             ];
         }
 
@@ -665,20 +688,62 @@ class MyProfileController extends Controller
             'jobProfile',
             'jobProfile.reportingTo',
             'jobProfile.jobDescriptions',
+            'jobProfile.jobDescriptions.jobProfileKra',
             'jobProfile.jobDescriptions.profileKras',
             'jobProfile.jobPerformanceStandards',
             'jobProfile.jobSpecifications',
             'jobProfile.reportingRelationships',
             'jobProfile.levelsOfAuthority',
             'jobProfile.subfunctionPosition',
+            'parent', // For "Reviewed by" and reports to
+            'children', // For "Supervises"
         ])->find($id);
 
         if (!$orgStructure) {
             return response()->json(['message' => 'Org structure not found'], 404);
         }
 
-        // Convert to array for manipulation
-        $orgStructureArray = $orgStructure->toArray();
+        // Fetch additional signature data
+        // Job Profile Prepared by: Current employee ($id)
+        $preparedBy = $orgStructure;
+
+        // Reviewed by: Parent (pid) from org_structures
+        // If parent id is 2, use id = 1 instead
+        $reviewedBy = $orgStructure->parent;
+        if ($reviewedBy && $reviewedBy->id == 2) {
+            $reviewedBy = OrgStructure::find(1);
+        }
+
+        // Approved by: Always ID = 1
+        $approvedBy = OrgStructure::find(1);
+
+        // Job Profile Noted by: Email jmsilvestre@megawide.com.ph
+        $notedBy = OrgStructure::where('email', 'jmsilvestre@megawide.com.ph')->first();
+
+        // Get supervises (all org structures where pid = current id)
+        $supervises = $orgStructure->children->pluck('name')->toArray();
+
+        // Get reports to information (from parent/pid)
+        $reportsToPosition = $reviewedBy ? $reviewedBy->position_title : 'N/A';
+        $reportsToName = $reviewedBy ? $reviewedBy->name : 'N/A';
+
+    // Convert to array for manipulation
+    $orgStructureArray = $orgStructure->toArray();
+
+    // Embed logo as base64 data URI for DomPDF reliability
+    $logoPath = public_path('images/megawide-logo.png');
+    if (is_file($logoPath)) {
+        $imageData = base64_encode(file_get_contents($logoPath));
+        $mime = function_exists('mime_content_type') ? mime_content_type($logoPath) : 'image/png';
+        $orgStructureArray['logo_data_uri'] = "data:$mime;base64,$imageData";
+    } else {
+        $orgStructureArray['logo_data_uri'] = null;
+    }
+
+        // Add additional fields for the info table
+        $orgStructureArray['supervises'] = $supervises;
+        $orgStructureArray['reports_to_position'] = $reportsToPosition;
+        $orgStructureArray['reports_to_name'] = $reportsToName;
 
         if (isset($orgStructureArray['job_profile'])) {
             // Transform jobPerformanceStandards if they exist
@@ -700,7 +765,7 @@ class MyProfileController extends Controller
                 $specs = $orgStructureArray['job_profile']['job_specifications'];
 
                 $formattedSpecifications = [
-                    'title' => 'Job Specifications',
+                    'title' => '3.0 Job Specifications',
                     'items' => [
                         [
                             'name' => 'Educational Background',
@@ -724,15 +789,15 @@ class MyProfileController extends Controller
                 $levels = $orgStructureArray['job_profile']['levels_of_authority'];
 
                 $formattedLevels = [
-                    'title' => 'Levels of Authority',
+                    'title' => '2.0 Levels of Authority',
                     'items' => [
                         [
                             'name' => 'Line Authority',
-                            'values' => $this->parseSpecificationValue($levels['line_authority'] ?? '')
+                            'values' => $this->parseLineAuthority($levels['line_authority'] ?? '')
                         ],
                         [
                             'name' => 'Staff Authority',
-                            'values' => $this->parseSpecificationValue($levels['staff_authority'] ?? '')
+                            'values' => $this->parseLineAuthority($levels['staff_authority'] ?? '')
                         ],
                     ]
                 ];
@@ -744,7 +809,7 @@ class MyProfileController extends Controller
                 $relations = $orgStructureArray['job_profile']['reporting_relationships'];
 
                 $formattedRelationships = [
-                    'title' => 'Reporting Relationships',
+                    'title' => '1.0 Reporting Relationships',
                     'items' => [
                         [
                             'name' => 'Primary / Direct Reporting Relationship',
@@ -764,15 +829,70 @@ class MyProfileController extends Controller
             }
         }
 
+        // Add signature data to the array
+        $orgStructureArray['signatures'] = [
+            'prepared_by' => [
+                'name' => $preparedBy->name ?? 'N/A',
+                'position' => $preparedBy->position_title ?? 'N/A',
+                'date' => 'DD MM YYYY',
+            ],
+            'reviewed_by' => $reviewedBy ? [
+                'name' => $reviewedBy->name ?? 'N/A',
+                'position' => $reviewedBy->position_title ?? 'N/A',
+                'date' => 'DD MM YYYY',
+            ] : null,
+            'approved_by' => $approvedBy ? [
+                'name' => $approvedBy->name ?? 'N/A',
+                'position' => $approvedBy->position_title ?? 'N/A',
+                'date' => 'DD MM YYYY',
+            ] : null,
+            'noted_by' => $notedBy ? [
+                'name' => $notedBy->name ?? 'N/A',
+                'position' => $notedBy->position_title ?? 'N/A',
+                'date' => 'DD MM YYYY',
+            ] : null,
+        ];
+
+        // Developer note: legacy compiled Blade views caused undefined $logoPath errors.
+        // Clear compiled views in non-production to ensure the updated template (using logo_data_uri) is loaded.
+        if (config('app.env') !== 'production') {
+            try {
+                Artisan::call('view:clear');
+            } catch (\Throwable $e) {
+                // Silently ignore cache clear failures
+            }
+        }
+
+        // Increase memory limit for complex PDFs (DomPDF Cpdf memory exhaustion at 128MB observed in logs)
+        $currentLimit = ini_get('memory_limit');
+        // If limit is numeric and < 256M, bump to 512M. Handles values like 128M, 256M, -1.
+        if ($currentLimit !== false && $currentLimit !== '-1') {
+            // Extract numeric portion
+            if (preg_match('/^(\d+)([MG])?$/i', $currentLimit, $m)) {
+                $value = (int) $m[1];
+                $unit = strtoupper($m[2] ?? 'M');
+                $megabytes = $unit === 'G' ? $value * 1024 : $value; // Treat plain number as MB
+                if ($megabytes < 256) {
+                    @ini_set('memory_limit', '512M');
+                }
+            }
+        }
+
         // Generate PDF
         $pdf = Pdf::loadView('pdf.job-profile', ['data' => $orgStructureArray]);
 
         // Set paper size and orientation
         $pdf->setPaper('a4', 'portrait');
 
-        // Generate filename
-        $filename = 'job-profile-' . ($orgStructureArray['position_title'] ?? 'document') . '-' . date('Ymd') . '.pdf';
-        $filename = preg_replace('/[^A-Za-z0-9\-_.]/', '_', $filename); // Sanitize filename
+        // Generate filename: <business_unit>. <department>. JP <position_title> (<lastname>). <date in YYYY MM DD>.pdf
+        $businessUnit = $orgStructureArray['business_unit'] ?? 'N-A';
+        $department = $orgStructureArray['department'] ?? 'N-A';
+        $positionTitle = $orgStructureArray['position_title'] ?? 'N-A';
+        $lastname = $orgStructureArray['lastname'] ?? 'N-A';
+        $dateStr = date('Y m d');
+        
+        $filename = "{$businessUnit}. {$department}. JP {$positionTitle} ({$lastname}). {$dateStr}.pdf";
+        $filename = preg_replace('/[\/\\\\:*?"<>|]/', '_', $filename); // Sanitize filename (remove invalid characters)
 
         // Return PDF as response with proper headers for download
         return $pdf->download($filename);

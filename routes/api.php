@@ -5,6 +5,7 @@ use App\Http\Controllers\FunctionPositionController;
 use App\Http\Controllers\MyProfileController;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\OrgStructureController;
+use App\Http\Controllers\PositionTitleController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -36,17 +37,17 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/manage-function', [FunctionPositionController::class, 'manageFunction']);
     Route::post('/manage-description', [FunctionPositionController::class, 'manageDescription']);
     Route::post('/delete-function', [FunctionPositionController::class, 'deleteFunction']);
-    Route::get('/subfunction-dept/{dept}', [FunctionPositionController::class, 'getSubfunctionDept']);
+    Route::get('/function-positions', [FunctionPositionController::class, 'index']);
 
     // Organization Structure Controller
     Route::put('/organization-structure/update', [OrgStructureController::class, 'update']);
     Route::delete('/organization-structure/delete/{id}', [OrgStructureController::class, 'destroy']);
     Route::post('/organization-structure/add/{pid}', [OrgStructureController::class, 'store']);
-    Route::get('/get-head-count', [OrgStructureController::class, 'getHeadCount']);
     Route::get('/get-count-per-position', [OrgStructureController::class, 'getCountPerPosition']);
     Route::post('/upload-image', [OrgStructureController::class, 'uploadImage']);
     Route::get('/user-profile/{email}', [OrgStructureController::class, 'userProfile']);
-    Route::get('/team-members/{email}', [OrgStructureController::class, 'teamMembers']);
+    Route::get('/team-members/{id}', [OrgStructureController::class, 'teamMembers']);
+    Route::get('/organization-structure', [OrgStructureController::class, 'index']);
 
     // Audit Log Controller
     Route::get('/functional-audit-logs', [AuditLogController::class, 'getFunctionalAuditLogs']);
@@ -55,16 +56,20 @@ Route::middleware('auth:sanctum')->group(function () {
     // My Profile Controller
     Route::post('/my-profile/store', [MyProfileController::class, 'store']);
     Route::get('/my-profile/download-pdf/{id}', [MyProfileController::class, 'exportPdf']);
-    Route::get('/my-profile/edit/{id}', [MyProfileController::class, 'edit']);
 
     // About Controller (About Us Tab)
     Route::post('/about/upsert', [AboutController::class, 'upsert']);
     // Route::delete('/about/{org_structure_id}', [AboutController::class, 'destroyByProfileId']);
     Route::get('/about/edit/{id}', [AboutController::class, 'edit']);
+    Route::get('/about/{id}', [AboutController::class, 'showByProfileId']);
+
+    // Position Title Controller
+    Route::apiResource('/position-titles', PositionTitleController::class);
 });
 
-    Route::get('/about/{id}', [AboutController::class, 'showByProfileId']);
     Route::get('/my-profile/{id}', [MyProfileController::class, 'show']);
+    Route::get('/indirect-reporting/{id}', [OrgStructureController::class, 'indirectReporting']);
+    Route::get('/get-head-count', [OrgStructureController::class, 'getHeadCount']);
+    Route::get('/my-profile/edit/{id}', [MyProfileController::class, 'edit']);
+    Route::get('/subfunction-dept/{dept}/{position?}', [FunctionPositionController::class, 'getSubfunctionDept']);
 
-
-    Route::get('/organization-structure', [OrgStructureController::class, 'index']);

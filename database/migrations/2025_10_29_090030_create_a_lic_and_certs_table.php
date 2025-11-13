@@ -9,8 +9,16 @@ return new class extends Migration {
     {
         Schema::create('a_lic_and_certs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('a_educ_prof_background_id')->constrained('a_educ_prof_backgrounds')->cascadeOnDelete();
-            $table->string('lic_and_cert');
+            $table->foreignId('a_about_id')->constrained('a_abouts')->cascadeOnDelete();
+            
+            // License/Certification/Special Course Details
+            $table->string('license_certification_name')->nullable();
+            $table->string('issuing_organization')->nullable();
+            $table->string('license_certification_number')->nullable();
+            $table->date('date_issued')->nullable();
+            $table->date('date_of_expiration')->nullable();
+            $table->boolean('non_expiring')->default(false);
+            
             $table->timestamps();
             $table->softDeletes();
         });

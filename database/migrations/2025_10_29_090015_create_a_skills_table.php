@@ -5,23 +5,25 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
+    /**
+     * Run the migrations.
+     */
     public function up(): void
     {
-        Schema::create('a_prev_work_experiences', function (Blueprint $table) {
+        Schema::create('a_skills', function (Blueprint $table) {
             $table->id();
             $table->foreignId('a_about_id')->constrained('a_abouts')->cascadeOnDelete();
-            $table->string('company')->nullable();
-            $table->string('job_title');
-            $table->string('job_level')->nullable();
-            $table->date('start_date')->nullable();
-            $table->date('end_date')->nullable();
+            $table->string('skill');
             $table->timestamps();
             $table->softDeletes();
         });
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
-        Schema::dropIfExists('a_prev_work_experiences');
+        Schema::dropIfExists('a_skills');
     }
 };

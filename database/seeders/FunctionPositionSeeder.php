@@ -13,24 +13,18 @@ class FunctionPositionSeeder extends Seeder
      */
     public function run(): void
     {
-        $data = [
-            ['id' => 1, 'name' => 'Chief Executive Office', 'order_id' => 1],
-            ['id' => 2, 'name' => 'Business Process Management', 'order_id' => 2],
-            ['id' => 3, 'name' => 'Facilities Management', 'order_id' => 3],
-            ['id' => 4, 'name' => 'Information Technology', 'order_id' => 4],
-            ['id' => 5, 'name' => 'Business Development', 'order_id' => 5],
-            ['id' => 6, 'name' => 'Corporate Affairs', 'order_id' => 6],
-            ['id' => 8, 'name' => 'Communications & Branding', 'order_id' => 7],
-            ['id' => 9, 'name' => 'Finance', 'order_id' => 8],
-            ['id' => 10, 'name' => 'Legal', 'order_id' => 9],
-            ['id' => 11, 'name' => 'Human Resources', 'order_id' => 10],
-            ['id' => 12, 'name' => 'Internal Audit', 'order_id' => 11],
-        ];
-
-        // DB::table('function_positions')->truncate();
-
-        foreach ($data as $item) {
-            \App\Models\FunctionPosition::create($item);
-        }
+        DB::table('function_positions')->insert([
+            ['id' => 1, 'name' => 'Chief Executive Office', 'order_id' => 1, 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 2, 'name' => 'Business Process Management', 'order_id' => 2, 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 3, 'name' => 'Facilities Management', 'order_id' => 3, 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 4, 'name' => 'Information Technology', 'order_id' => 4, 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 5, 'name' => 'Business Development', 'order_id' => 5, 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 6, 'name' => 'Corporate Affairs', 'order_id' => 6, 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 8, 'name' => 'Communications & Branding', 'order_id' => 7, 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 9, 'name' => 'Finance', 'order_id' => 8, 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 10, 'name' => 'Legal', 'order_id' => 10, 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 11, 'name' => 'Human Resources', 'order_id' => 9, 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 12, 'name' => 'Internal Audit', 'order_id' => 11, 'created_at' => now(), 'updated_at' => now()]
+        ]);
     }
 }

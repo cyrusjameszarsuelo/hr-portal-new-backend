@@ -17,6 +17,7 @@ return new class extends Migration {
             $table->string('business_unit');
             $table->string('kra');
             $table->text('kra_description')->nullable();
+            $table->text('roles')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

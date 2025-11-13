@@ -10,8 +10,27 @@ class About extends Model
 
     protected $fillable = [
         'org_structure_id',
-        'birthdate',
-        'marital_status',
+        'employee_id',
+        'nickname',
+        'birth_date',
+        'gender',
+        'civil_status',
+        'phone_number',
+        'blood_type',
+        'emergency_contact_name',
+        'relationship_to_employee',
+        'emergency_contact_number',
+        'citizenship',
+        'birth_place',
+        'highest_educational_attainment',
+        'current_address_street',
+        'current_address_city',
+        'current_address_region',
+        'current_address_zip_code',
+        'permanent_address_street',
+        'permanent_address_city',
+        'permanent_address_region',
+        'permanent_address_zip_code',
     ];
 
     public function orgStructure()
@@ -24,14 +43,24 @@ class About extends Model
         return $this->hasMany(Interest::class, 'a_about_id');
     }
 
+    public function skills()
+    {
+        return $this->hasMany(Skill::class, 'a_about_id');
+    }
+
     public function educProfBackgrounds()
     {
         return $this->hasMany(EducProfBackground::class, 'a_about_id');
     }
 
-    public function megawideWorkExperiences()
+    public function licAndCerts()
     {
-        return $this->hasMany(MegawideWorkExperience::class, 'a_about_id');
+        return $this->hasMany(LicAndCert::class, 'a_about_id');
+    }
+
+    public function megawideWorkExperience()
+    {
+        return $this->hasOne(MegawideWorkExperience::class, 'a_about_id');
     }
 
     public function prevWorkExperiences()
