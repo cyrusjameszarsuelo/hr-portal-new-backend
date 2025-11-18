@@ -310,6 +310,8 @@ class MyProfileController extends Controller
             'reporting_relationships.primary' => 'sometimes|string',
             'reporting_relationships.secondary' => 'sometimes|string',
             'reporting_relationships.tertiary' => 'sometimes|string',
+            // reporting_to must have a value and reference an existing org_structure
+            'reporting_to' => 'required|exists:org_structures,id',
             // levels_of_authority object
             'levels_of_authority' => 'sometimes|array',
             'levels_of_authority.line_authority' => 'sometimes|nullable|string',
@@ -323,13 +325,13 @@ class MyProfileController extends Controller
             'job_descriptions' => 'sometimes|array',
             // NOTE: table name is jp_descriptions (not job_descriptions)
             'job_descriptions.*.id' => 'sometimes|exists:jp_descriptions,id',
-            // kra is numeric id referencing job_profile_kras (keep exists) or relax if needed
+            // kra is numeric id referencing job_profile_kras
             'job_descriptions.*.kra' => 'required|exists:job_profile_kras,id',
             'job_descriptions.*.description' => 'required|string',
             'job_descriptions.*.subfunction' => 'nullable|array',
-            'job_descriptions.*.subfunction.id' => 'required_with:job_descriptions.*.subfunction|exists:subfunction_positions,id',
+            'job_descriptions.*.subfunction.id' => 'sometimes|exists:subfunction_positions,id',
             'job_descriptions.*.profile_kra' => 'sometimes|array',
-            'job_descriptions.*.profile_kra.*.id' => 'sometimes|exists:jp_description_kras,id',
+            'job_descriptions.*.profile_kra.*.id' => 'sometimes|nullable|integer',
             'job_descriptions.*.profile_kra.*.kra_description' => 'required|string',
             'job_descriptions.*.profile_kra.*.description' => 'required|string',
         ]);
@@ -514,7 +516,7 @@ class MyProfileController extends Controller
 
                     foreach ($descData['profile_kra'] as $kraData) {
                         if (isset($kraData['id'])) {
-                            // Update existing ProfileKra
+                            // Try to update existing ProfileKra; if not found or mismatched, create new instead
                             $profileKra = ProfileKra::find($kraData['id']);
                             if ($profileKra && $profileKra->job_description_id == $jobDescription->id) {
                                 $oldPKData = $profileKra->toArray();
@@ -525,6 +527,18 @@ class MyProfileController extends Controller
 
                                 if ($request->has('user_id')) {
                                     auditLog('ProfileKra', 'edit', $oldPKData, $profileKra->toArray(), $request->input('user_id'));
+                                }
+                            } else {
+                                // ID provided but not found (or belongs to different job description) -> create new
+                                $profileKra = new ProfileKra();
+                                $profileKra->job_description_id = $jobDescription->id;
+                                $profileKra->kra_description = $kraData['kra_description'];
+                                $profileKra->deliverables = $kraData['description'];
+                                $profileKra->save();
+                                $kraIds[] = $profileKra->id;
+
+                                if ($request->has('user_id')) {
+                                    auditLog('ProfileKra', 'create', null, $profileKra->toArray(), $request->input('user_id'));
                                 }
                             }
                         } else {

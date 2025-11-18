@@ -101,10 +101,11 @@ class FunctionPositionController extends Controller
         $subfunctions = SubfunctionPosition::with(['jobProfileKras' => function ($q) use ($dept, $position) {
                 $q->where('department', 'LIKE', $dept)
                   ->where('roles', 'LIKE', "%$position%");
-            }])
+            }, 'jobProfileKras.jobProfileDuties'])
             ->whereHas('jobProfileKras', function ($query) use ($dept, $position) {
                 $query->where('department', 'LIKE', $dept)
                       ->where('roles', 'LIKE', "%$position%");
+                      
             })
             ->orderBy('order_id')
             ->get();

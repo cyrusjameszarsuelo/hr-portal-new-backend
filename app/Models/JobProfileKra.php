@@ -11,4 +11,9 @@ class JobProfileKra extends Model
     {
         return $this->belongsTo(SubfunctionPosition::class);
     }
+
+    public function jobProfileDuties()
+    {
+        return $this->hasMany(JobProfileDuty::class);
+    }
 }

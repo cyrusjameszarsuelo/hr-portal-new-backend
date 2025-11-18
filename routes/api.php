@@ -38,7 +38,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/manage-description', [FunctionPositionController::class, 'manageDescription']);
     Route::post('/delete-function', [FunctionPositionController::class, 'deleteFunction']);
     Route::get('/function-positions', [FunctionPositionController::class, 'index']);
-    Route::get('/subfunction-dept/{dept}/{position?}', [FunctionPositionController::class, 'getSubfunctionDept']);
 
     // Organization Structure Controller
     Route::put('/organization-structure/update', [OrgStructureController::class, 'update']);
@@ -73,3 +72,4 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 
+    Route::get('/subfunction-dept/{dept}/{position?}', [FunctionPositionController::class, 'getSubfunctionDept']);
