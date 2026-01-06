@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 use App\Models\About;
 use App\Models\OrgStructure;
 use App\Models\Interest;
@@ -51,8 +52,15 @@ class AboutController extends Controller
 			// Personal Information
 			'org_structure_id' => $about->org_structure_id,
 			'employee_id' => $about->employee_id,
+			'firstname' => $about->firstname,
+			'middlename' => $about->middlename,
+			'lastname' => $about->lastname,
+			'suffix' => $about->suffix,
 			'nickname' => $about->nickname,
-			'birth_date' => $about->birth_date,
+			'birthdate' => $about->birthdate,
+			'number_of_children' => $about->number_of_children,
+			'personal_email' => $about->personal_email,
+			'upload_photo' => $about->upload_photo,
 			'gender' => $about->gender,
 			'civil_status' => $about->civil_status,
 			'phone_number' => $about->phone_number,
@@ -69,12 +77,14 @@ class AboutController extends Controller
 
 			// Current Address
 			'current_address_street' => $about->current_address_street,
+			'current_address_barangay' => $about->current_address_barangay,
 			'current_address_city' => $about->current_address_city,
 			'current_address_region' => $about->current_address_region,
 			'current_address_zip_code' => $about->current_address_zip_code,
 
 			// Permanent Address
 			'permanent_address_street' => $about->permanent_address_street,
+			'permanent_address_barangay' => $about->permanent_address_barangay,
 			'permanent_address_city' => $about->permanent_address_city,
 			'permanent_address_region' => $about->permanent_address_region,
 			'permanent_address_zip_code' => $about->permanent_address_zip_code,
@@ -114,8 +124,8 @@ class AboutController extends Controller
 				'license_certification_name' => $l->license_certification_name,
 				'issuing_organization' => $l->issuing_organization,
 				'license_certification_number' => $l->license_certification_number,
-				'date_issued' => $l->date_issued,
-				'date_of_expiration' => $l->date_of_expiration,
+				'date_issued' => $l->date_issued ? Carbon::parse($l->date_issued)->format('Y-m-d') : '',
+				'date_of_expiration' => $l->date_of_expiration ? Carbon::parse($l->date_of_expiration)->format('Y-m-d') : '',
 				'non_expiring' => (bool) $l->non_expiring,
 			];
 		})->values();
@@ -124,13 +134,13 @@ class AboutController extends Controller
 		$mwe = $about->megawideWorkExperience;
 		if ($mwe) {
 			$aboutArr['megawide_work_experience'] = [
-				'job_title' => $mwe->job_title,
-				'department' => $mwe->department,
-				'unit' => $mwe->unit,
-				'job_level' => $mwe->job_level,
+				'position_title_id' => $mwe->position_title_id,
+				'department_id' => $mwe->department_id,
+				'sbu_id' => $mwe->sbu_id,
+				'level_id' => $mwe->level_id,
 				'employment_status' => $mwe->employment_status,
-				'current_role_start_date' => $mwe->current_role_start_date,
-				'current_role_end_date' => $mwe->current_role_end_date,
+				'current_role_start_date' => $mwe->current_role_start_date ? Carbon::parse($mwe->current_role_start_date)->format('Y-m-d') : '',
+				'current_role_end_date' => $mwe->current_role_end_date ? Carbon::parse($mwe->current_role_end_date)->format('Y-m-d') : '',
 				'is_current' => (bool) $mwe->is_current,
 				// Return array as-is of objects with ids for frontend select
 				'functions' => $mwe->subfunctionPositions->map(function ($f) {
@@ -143,8 +153,8 @@ class AboutController extends Controller
 						'worked_in_megawide' => (bool) ($a->worked_in_megawide ?? true),
 						'previous_department' => $a->previous_department,
 						'previous_job_title' => $a->previous_job_title,
-						'previous_role_start_date' => $a->previous_role_start_date,
-						'end_of_assignment' => $a->end_of_assignment,
+						'previous_role_start_date' => $a->previous_role_start_date ? Carbon::parse($a->previous_role_start_date)->format('Y-m-d') : '',
+						'end_of_assignment' => $a->end_of_assignment ? Carbon::parse($a->end_of_assignment)->format('Y-m-d') : '',
 					];
 				})->values(),
 			];
@@ -231,18 +241,27 @@ class AboutController extends Controller
 	 */
 	public function upsert(Request $request)
 	{
+		// Handle file upload first (if present) and validate input
 		$data = $request->all();
 
 		$request->validate([
 			'org_structure_id' => 'required|exists:org_structures,id',
 
 			// About basics
+			// basic
 			'employee_id' => 'nullable|string',
+			'firstname' => 'nullable|string',
+			'middlename' => 'nullable|string',
+			'lastname' => 'nullable|string',
+			'suffix' => 'nullable|string',
 			'nickname' => 'nullable|string',
-			'birth_date' => 'nullable|date',
+			'birthdate' => 'nullable|date',
 			'gender' => 'nullable|string',
 			'civil_status' => 'nullable|string',
+			'number_of_children' => 'nullable|integer|min:0',
 			'phone_number' => 'nullable|string',
+			'personal_email' => 'nullable|email',
+			'upload_photo' => 'nullable|file|image|max:5120',
 			'blood_type' => 'nullable|string',
 			'emergency_contact_name' => 'nullable|string',
 			'relationship_to_employee' => 'nullable|string',
@@ -250,10 +269,12 @@ class AboutController extends Controller
 			'citizenship' => 'nullable|string',
 			'birth_place' => 'nullable|string',
 			'current_address_street' => 'nullable|string',
+			'current_address_barangay' => 'nullable|string',
 			'current_address_city' => 'nullable|string',
 			'current_address_region' => 'nullable|string',
 			'current_address_zip_code' => 'nullable|string',
 			'permanent_address_street' => 'nullable|string',
+			'permanent_address_barangay' => 'nullable|string',
 			'permanent_address_city' => 'nullable|string',
 			'permanent_address_region' => 'nullable|string',
 			'permanent_address_zip_code' => 'nullable|string',
@@ -269,18 +290,26 @@ class AboutController extends Controller
 			'language_proficiencies' => 'sometimes|array',
 		]);
 
+		// If photo file exists, store it and set path into payload
+		if ($request->hasFile('upload_photo')) {
+			$path = $request->file('upload_photo')->store('about_photos', 'public');
+			// set the stored path in the incoming data array so it's saved to DB
+			$data['upload_photo'] = $path;
+		}
+
 		return DB::transaction(function () use ($data) {
 			// Upsert About
 			$about = About::updateOrCreate(
 				['org_structure_id' => $data['org_structure_id']],
 				collect($data)->only([
 					'org_structure_id',
-					'employee_id', 'nickname', 'birth_date', 'gender', 'civil_status',
-					'phone_number', 'blood_type',
+					'employee_id', 'firstname','middlename','lastname','suffix','nickname', 'birthdate', 'gender', 'civil_status',
+					'number_of_children',
+					'phone_number', 'personal_email', 'upload_photo', 'blood_type',
 					'emergency_contact_name', 'relationship_to_employee', 'emergency_contact_number',
 					'citizenship', 'birth_place',
-					'current_address_street', 'current_address_city', 'current_address_region', 'current_address_zip_code',
-					'permanent_address_street', 'permanent_address_city', 'permanent_address_region', 'permanent_address_zip_code',
+					'current_address_street','current_address_barangay', 'current_address_city', 'current_address_region', 'current_address_zip_code',
+					'permanent_address_street','permanent_address_barangay', 'permanent_address_city', 'permanent_address_region', 'permanent_address_zip_code',
 				])->toArray()
 			);
 
@@ -313,13 +342,13 @@ class AboutController extends Controller
 			// Megawide Work Experience (hasOne parent)
 			if (isset($data['megawide_work_experience'])) {
 				$mwePayload = collect($data['megawide_work_experience'])->only([
-					'job_title','department','unit','job_level','employment_status',
+					'position_title_id','department_id','sbu_id','level_id','employment_status',
 					'current_role_start_date','current_role_end_date','is_current'
 				])->toArray();
 
 				$mwe = MegawideWorkExperience::updateOrCreate(
-					['a_about_id' => $about->id],
-					array_merge(['a_about_id' => $about->id], $mwePayload)
+					['about_id' => $about->id],
+					array_merge(['about_id' => $about->id], $mwePayload)
 				);
 
 				// Sync subfunction positions pivot
@@ -348,7 +377,7 @@ class AboutController extends Controller
 		if (isset($data['previous_work_experiences'])) {
 			$this->syncHasManyDirect(
 				PrevWorkExperience::class,
-				'a_about_id',
+				'about_id',
 				$about->id,
 				$data['previous_work_experiences'],
 				['company','job_title','job_level','start_date','end_date']

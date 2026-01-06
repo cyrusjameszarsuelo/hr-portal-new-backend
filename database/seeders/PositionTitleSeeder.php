@@ -66,11 +66,20 @@ class PositionTitleSeeder extends Seeder
             'Associate Legal Counsel',
             'Corporate Regulatory Officer',
             'Paralegal',
+            'Enterprise Applications Manager',
+            'VIP Security',
+            'Senior Business Development Assistant',
+            'Corporate Communications and Branding Manager',
+            'Chief Finance Officer',
+            'Payroll Specialist',
+            'Benefits Specialists',
+            'Learning & Engagement Head',
+            'Messenger',
         ];
 
         // Insert all positions
         DB::table('position_titles')->insert(array_map(fn($title) => [
-            'position_title' => $title,
+            'position' => $title,
             'created_at' => $now,
             'updated_at' => $now,
         ], $positions));

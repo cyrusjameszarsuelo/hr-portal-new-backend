@@ -12,7 +12,7 @@ class LanguageProficiency extends Model
     protected $table = 'a_language_proficiencies';
 
     protected $fillable = [
-        'a_about_id',
+        'about_id',
         'language',
         'written',
         'w_prof',
@@ -27,6 +27,6 @@ class LanguageProficiency extends Model
 
     public function about()
     {
-        return $this->belongsTo(About::class, 'a_about_id');
+        return $this->belongsTo(About::class, 'about_id');
     }
 }

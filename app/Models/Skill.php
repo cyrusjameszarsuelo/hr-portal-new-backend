@@ -12,12 +12,12 @@ class Skill extends Model
     protected $table = 'a_skills';
 
     protected $fillable = [
-        'a_about_id',
+        'about_id',
         'skill',
     ];
 
     public function about()
     {
-        return $this->belongsTo(About::class, 'a_about_id');
+        return $this->belongsTo(About::class, 'about_id');
     }
 }

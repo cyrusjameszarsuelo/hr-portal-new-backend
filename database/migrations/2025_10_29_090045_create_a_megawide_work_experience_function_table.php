@@ -13,7 +13,7 @@ return new class extends Migration {
                 ->constrained('a_megawide_work_experiences', 'id', 'a_mw_exp_func_mw_exp_id_fk')
                 ->cascadeOnDelete();
             $table->foreignId('subfunction_position_id')
-                ->constrained('subfunction_positions', 'id', 'a_mw_exp_func_subfunc_pos_id_fk')
+                ->constrained('subfunction_positions', 'id', 'a_mw_exp_func_subfunc_id_fk')
                 ->cascadeOnDelete();
             $table->timestamps();
             $table->unique(['megawide_work_experience_id', 'subfunction_position_id'], 'a_mw_exp_func_unique');

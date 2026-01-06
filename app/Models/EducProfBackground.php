@@ -11,7 +11,7 @@ class EducProfBackground extends Model
     protected $table = 'a_educ_prof_backgrounds';
 
     protected $fillable = [
-        'a_about_id',
+        'about_id',
         'education_level',
         'school_attended',
         'degree_program_course',
@@ -27,6 +27,6 @@ class EducProfBackground extends Model
 
     public function about()
     {
-        return $this->belongsTo(About::class, 'a_about_id');
+        return $this->belongsTo(About::class, 'about_id');
     }
 }

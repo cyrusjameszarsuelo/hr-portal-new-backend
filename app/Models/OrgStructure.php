@@ -20,22 +20,24 @@ class OrgStructure extends Model
     }
 
     protected $fillable = [
-        'business_unit',
-        'company',
-        'department',
-        'email',
-        'emp_no',
+        'is_active',
         'firstname',
         'lastname',
-        'level',
         'nickname',
-        'position_title',
         'name',
+        'email',
+        'position_title_id',
         'reporting',
-        'pid',
-        'user_id',
-        'is_active',
+        'emp_no',
+        'level_id',
+        'department_id',
+        'sbu_id',
+        'dept_head',
+        'is_admin',
+        'company',
         'image',
+        'pid',
+        'user_id'
     ];
 
     public function parent()
@@ -56,5 +58,25 @@ class OrgStructure extends Model
     public function jobProfile()
     {
         return $this->hasOne(JobProfile::class, 'org_structure_id');
+    }
+
+    public function department()
+    {
+        return $this->belongsTo(Department::class, 'department_id');
+    }
+
+    public function positionTitle()
+    {
+        return $this->belongsTo(PositionTitle::class, 'position_title_id');
+    }
+
+    public function sbu()
+    {
+        return $this->belongsTo(SBU::class, 'sbu_id');
+    }
+
+    public function level()
+    {
+        return $this->belongsTo(Level::class, 'level_id');
     }
 }

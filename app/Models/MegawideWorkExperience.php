@@ -11,11 +11,11 @@ class MegawideWorkExperience extends Model
     public $timestamps = false; // table does not have created_at/updated_at
 
     protected $fillable = [
-        'a_about_id',
-        'job_title',
-        'department',
-        'unit',
-        'job_level',
+        'about_id',
+        'position_title_id',
+        'department_id',
+        'sbu_id',
+        'level_id',
         'employment_status',
         'current_role_start_date',
         'current_role_end_date',
@@ -30,7 +30,7 @@ class MegawideWorkExperience extends Model
 
     public function about()
     {
-        return $this->belongsTo(About::class, 'a_about_id');
+        return $this->belongsTo(About::class, 'about_id');
     }
 
     public function previousAssignments()

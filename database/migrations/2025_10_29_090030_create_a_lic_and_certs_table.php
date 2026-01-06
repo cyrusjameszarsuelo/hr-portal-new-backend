@@ -9,7 +9,7 @@ return new class extends Migration {
     {
         Schema::create('a_lic_and_certs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('a_about_id')->constrained('a_abouts')->cascadeOnDelete();
+            $table->foreignId('about_id')->constrained('a_abouts')->cascadeOnDelete();
             
             // License/Certification/Special Course Details
             $table->string('license_certification_name')->nullable();

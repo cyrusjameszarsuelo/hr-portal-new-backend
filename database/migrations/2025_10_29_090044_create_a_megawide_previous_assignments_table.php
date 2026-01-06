@@ -12,7 +12,7 @@ return new class extends Migration {
             $table->foreignId('megawide_work_experience_id')
                 ->constrained('a_megawide_work_experiences', 'id', 'a_mw_prev_assign_mw_exp_id_fk')
                 ->cascadeOnDelete();
-            $table->string('sbu')->nullable();
+            $table->foreignId('sbu_id')->nullable()->constrained('sbus')->onDelete('set null');
             $table->boolean('worked_in_megawide')->default(true);
             $table->string('previous_department')->nullable();
             $table->string('previous_job_title')->nullable();

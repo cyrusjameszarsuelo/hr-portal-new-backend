@@ -9,8 +9,9 @@ return new class extends Migration {
     {
         Schema::create('a_prev_work_experiences', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('a_about_id')->constrained('a_abouts')->cascadeOnDelete();
+            $table->foreignId('about_id')->constrained('a_abouts')->cascadeOnDelete();
             $table->string('company')->nullable();
+            $table->string('megawide_equivalent')->nullable();
             $table->string('job_title');
             $table->string('job_level')->nullable();
             $table->date('start_date')->nullable();

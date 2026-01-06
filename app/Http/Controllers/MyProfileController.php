@@ -252,6 +252,47 @@ class MyProfileController extends Controller
             }
         }
 
+        // Build top-level response mapping related models to readable fields
+        if ($orgStructure) {
+            // Prefer jobProfile.reportingTo->name, fallback to parent name, fallback to raw reporting value
+            $reportingName = null;
+            if ($orgStructure->jobProfile && $orgStructure->jobProfile->reportingTo) {
+                $reportingName = $orgStructure->jobProfile->reportingTo->name;
+            } elseif ($orgStructure->parent) {
+                $reportingName = $orgStructure->parent->name;
+            } else {
+                $reportingName = $orgStructure->reporting;
+            }
+
+            $response = [
+                'id' => $orgStructure->id,
+                'is_active' => $orgStructure->is_active,
+                'firstname' => $orgStructure->firstname,
+                'lastname' => $orgStructure->lastname,
+                'nickname' => $orgStructure->nickname,
+                'name' => $orgStructure->name,
+                'email' => $orgStructure->email,
+                'position' => $orgStructure->positionTitle?->position ?? null,
+                'reporting' => $reportingName,
+                'emp_no' => $orgStructure->emp_no,
+                'level' => $orgStructure->level?->level ?? null,
+                'department' => $orgStructure->department?->department ?? null,
+                'sbu' => $orgStructure->sbu?->sbu ?? null,
+                'dept_head' => $orgStructure->dept_head,
+                'is_admin' => $orgStructure->is_admin,
+                'company' => $orgStructure->company,
+                'image' => $orgStructure->image,
+                'pid' => $orgStructure->pid,
+                'user_id' => $orgStructure->user_id,
+                'created_at' => $orgStructure->created_at,
+                'updated_at' => $orgStructure->updated_at,
+                'deleted_at' => $orgStructure->deleted_at,
+                'job_profile' => $orgStructureArray['job_profile'] ?? null,
+            ];
+
+            return response()->json($response);
+        }
+
         return response()->json($orgStructureArray);
     }
 

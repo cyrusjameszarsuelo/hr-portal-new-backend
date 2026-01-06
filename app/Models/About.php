@@ -11,23 +11,49 @@ class About extends Model
     protected $fillable = [
         'org_structure_id',
         'employee_id',
+
+        // name fields
+        'firstname',
+        'middlename',
+        'lastname',
+        'suffix',
+
         'nickname',
+
+        // birth
         'birth_date',
+        'birthdate',
+
         'gender',
         'civil_status',
+        'number_of_children',
+
+        // contacts
         'phone_number',
+        'personal_email',
+        'upload_photo',
         'blood_type',
+
+        // emergency
         'emergency_contact_name',
         'relationship_to_employee',
         'emergency_contact_number',
+
+        // other
         'citizenship',
         'birth_place',
         'highest_educational_attainment',
+
+        // current address
         'current_address_street',
+        'current_address_barangay',
         'current_address_city',
         'current_address_region',
         'current_address_zip_code',
+
+        // permanent address
         'permanent_address_street',
+        'permanent_address_barangay',
         'permanent_address_city',
         'permanent_address_region',
         'permanent_address_zip_code',
@@ -40,42 +66,42 @@ class About extends Model
 
     public function interests()
     {
-        return $this->hasMany(Interest::class, 'a_about_id');
+        return $this->hasMany(Interest::class, 'about_id');
     }
 
     public function skills()
     {
-        return $this->hasMany(Skill::class, 'a_about_id');
+        return $this->hasMany(Skill::class, 'about_id');
     }
 
     public function educProfBackgrounds()
     {
-        return $this->hasMany(EducProfBackground::class, 'a_about_id');
+        return $this->hasMany(EducProfBackground::class, 'about_id');
     }
 
     public function licAndCerts()
     {
-        return $this->hasMany(LicAndCert::class, 'a_about_id');
+        return $this->hasMany(LicAndCert::class, 'about_id');
     }
 
     public function megawideWorkExperience()
     {
-        return $this->hasOne(MegawideWorkExperience::class, 'a_about_id');
+        return $this->hasOne(MegawideWorkExperience::class, 'about_id');
     }
 
     public function prevWorkExperiences()
     {
-        return $this->hasMany(PrevWorkExperience::class, 'a_about_id');
+        return $this->hasMany(PrevWorkExperience::class, 'about_id');
     }
 
     public function technicalProficiencies()
     {
-        return $this->hasMany(TechnicalProficiency::class, 'a_about_id');
+        return $this->hasMany(TechnicalProficiency::class, 'about_id');
     }
 
     public function languageProficiencies()
     {
-        return $this->hasMany(LanguageProficiency::class, 'a_about_id');
+        return $this->hasMany(LanguageProficiency::class, 'about_id');
     }
 
     /**

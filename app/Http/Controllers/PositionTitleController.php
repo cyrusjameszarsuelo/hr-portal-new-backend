@@ -12,7 +12,7 @@ class PositionTitleController extends Controller
      */
     public function index()
     {
-        $position_titles = PositionTitle::all();
+        $position_titles = PositionTitle::orderBy('position', 'ASC')->get();
 
         return response()->json($position_titles);
     }

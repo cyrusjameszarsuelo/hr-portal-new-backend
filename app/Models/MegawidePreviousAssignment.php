@@ -13,7 +13,7 @@ class MegawidePreviousAssignment extends Model
 
     protected $fillable = [
         'megawide_work_experience_id',
-        'sbu',
+        'sbu_id',
         'worked_in_megawide',
         'previous_department',
         'previous_job_title',

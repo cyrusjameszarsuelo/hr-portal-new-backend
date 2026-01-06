@@ -10,9 +10,33 @@ class OrgStructureController extends Controller
 {
     public function index()
     {
-        $orgStructure = OrgStructure::all();
+        $orgStructure = OrgStructure::with(['department', 'sbu', 'level', 'positionTitle'])->get();
 
-        return response()->json($orgStructure);
+        $orgStructureResponse = $orgStructure->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'is_active' => $item->is_active,
+                'firstname' => $item->firstname,
+                'lastname' => $item->lastname,
+                'nickname' => $item->nickname,
+                'name' => $item->name,
+                'email' => $item->email,
+                'position' => $item->positionTitle->position ?? null,
+                'reporting' => $item->reporting,
+                'emp_no' => $item->emp_no,
+                'level' => $item->level ? $item->level->level : null,
+                'department' => $item->department ? $item->department->department : null,
+                'sbu' => $item->sbu ? $item->sbu->sbu : null,
+                'dept_head' => $item->dept_head,
+                'is_admin' => $item->is_admin,
+                'company' => $item->company,
+                'image' => $item->image,
+                'pid' => $item->pid,
+                'user_id' => $item->user_id,
+            ];
+        });
+
+        return response()->json($orgStructureResponse);
     }
 
     public function store(Request $request, $pid)
@@ -98,55 +122,115 @@ class OrgStructureController extends Controller
     {
 
         $position_title_order = [
-            'Executive',
-            'Manager',
-            'Rank & File',
-            'Supervisor / Officer'
+            1,
+            3,
+            5,
+            6
         ];
-        // Return department and business unit headcounts. Use explicit select with
-        // COUNT to avoid ONLY_FULL_GROUP_BY SQL errors on MySQL strict modes.
-        $headCount = OrgStructure::select('department', 'business_unit')
-            ->selectRaw('COUNT(*) as headcount')
-            ->selectRaw('SUM(CASE WHEN firstname = "Employee" THEN 1 ELSE 0 END) as vacant')
-            ->selectRaw('COUNT(*) - SUM(CASE WHEN firstname = "Employee" THEN 1 ELSE 0 END) as filled')
+        // include an aggregate for level_id (min) so we can ORDER the grouped rows
+        // while staying compatible with ONLY_FULL_GROUP_BY
+        // Use Eloquent + collections to compute grouped results and include related names.
+        $all = OrgStructure::with(['department', 'sbu', 'level'])
             ->where('name', '!=', 'OCEO')
-            ->orderByRaw('FIELD(level, ?, ?, ?, ?)', $position_title_order)
-            ->groupBy('department', 'business_unit')
             ->get();
 
-        // Overall totals across all departments/business units
-        $totals = OrgStructure::selectRaw('COUNT(*) as headcount')
-            ->selectRaw('SUM(CASE WHEN firstname = "Employee" THEN 1 ELSE 0 END) as vacant')
-            ->selectRaw('COUNT(*) - SUM(CASE WHEN firstname = "Employee" THEN 1 ELSE 0 END) as filled')
-            ->first();
+        // Group by department_id + sbu_id for headCount
+        $groups = $all->groupBy(function ($item) {
+            return ($item->department_id ?? '0') . '|' . ($item->sbu_id ?? '0');
+        });
+
+        $headCount = $groups->map(function ($group) use ($position_title_order) {
+            $head = $group->count();
+            $vacant = $group->filter(function ($g) {
+                return trim((string) ($g->firstname ?? '')) === 'Employee';
+            })->count();
+            $minLevel = $group->pluck('level_id')->filter()->min();
+
+            $first = $group->first();
+
+            $levelName = null;
+            if ($minLevel) {
+                $match = $group->firstWhere('level_id', $minLevel);
+                $levelName = ($match && $match->level) ? $match->level->level : null;
+            }
+
+            return [
+                // 'department_id' => $first->department_id,
+                // 'sbu_id' => $first->sbu_id,
+                'headcount' => $head,
+                'vacant' => $vacant,
+                'filled' => $head - $vacant,
+                'min_level' => $minLevel,
+                'department' => $first->department?->department ?? null,
+                'sbu' => $first->sbu?->sbu ?? null,
+                'level' => $levelName,
+            ];
+        })->values()
+            ->sortBy(function ($row) use ($position_title_order) {
+                $idx = array_search($row['min_level'], $position_title_order, true);
+                return $idx === false ? PHP_INT_MAX : $idx;
+            })->values();
+
+        $totals = [
+            'headcount' => $all->count(),
+            'vacant' => $all->filter(function ($g) {
+                return trim((string) ($g->firstname ?? '')) === 'Employee';
+            })->count(),
+            'filled' => $all->count() - $all->filter(function ($g) {
+                return trim((string) ($g->firstname ?? '')) === 'Employee';
+            })->count(),
+        ];
 
         return response()->json([
             'data' => $headCount,
             'totals' => $totals,
         ]);
+
+
     }
 
     public function getCountPerPosition()
     {
 
         $level_order = [
-            'Executive',
-            'Manager',
-            'Supervisor / Officer',
-            'Rank & File',
+            1,
+            3,
+            5,
+            6
         ];
 
-        $countPerPosition = OrgStructure::select('department', 'business_unit', 'level')
-            ->selectRaw('COUNT(*) as headcount')
-            ->selectRaw('SUM(CASE WHEN firstname = "Employee" THEN 1 ELSE 0 END) as vacant')
-            ->selectRaw('COUNT(*) - SUM(CASE WHEN firstname = "Employee" THEN 1 ELSE 0 END) as filled')
+        // Use Eloquent collections + relationships to compute counts per (department, sbu, level)
+        $all = OrgStructure::with(['department', 'sbu', 'level'])
             ->where('name', '!=', 'OCEO')
-            ->groupBy('department', 'business_unit', 'level')
-            // Order groups by department, business_unit and then by custom level order
-            ->orderBy('department')
-            ->orderBy('business_unit')
-            ->orderByRaw('FIELD(level, ?, ?, ?, ?)', $level_order)
             ->get();
+
+        $groups = $all->groupBy(function ($item) {
+            return ($item->department_id ?? '0') . '|' . ($item->sbu_id ?? '0') . '|' . ($item->level_id ?? '0');
+        });
+
+        $countPerPosition = $groups->map(function ($group) use ($level_order) {
+            $first = $group->first();
+            $head = $group->count();
+            $vacant = $group->filter(function ($g) {
+                return trim((string) ($g->firstname ?? '')) === 'Employee';
+            })->count();
+            return [
+                // 'department_id' => $first->department_id,
+                // 'sbu_id' => $first->sbu_id,
+                'level_id' => $first->level_id,
+                'headcount' => $head,
+                'vacant' => $vacant,
+                'filled' => $head - $vacant,
+                'department' => $first->department?->department ?? null,
+                'sbu' => $first->sbu?->sbu ?? null,
+                'level' => $first->level?->level ?? null,
+            ];
+        })->values()
+            ->sortBy([['department', 'asc'], ['sbu', 'asc']])
+            ->sortBy(function ($row) use ($level_order) {
+                $idx = array_search($row['level_id'], $level_order, true);
+                return $idx === false ? PHP_INT_MAX : $idx;
+            })->values();
 
         return response()->json([
             'data' => $countPerPosition,

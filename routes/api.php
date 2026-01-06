@@ -10,6 +10,8 @@ use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\MicrosoftAuthController;
+use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Api\TableController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -18,16 +20,24 @@ Route::get('/user', function (Request $request) {
 
 Route::get('/auth/redirect', [MicrosoftAuthController::class, 'redirectToMicrosoft']);
 Route::get('/connect', [MicrosoftAuthController::class, 'handleMicrosoftCallback']);
+Route::post('/auth/login', [AuthController::class, 'login']);
 Route::post('/logout/{id}', [UserController::class, 'logout']);
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/tables', [TableController::class, 'index']);
+    Route::get('/tables/{table}/rows', [TableController::class, 'rows']);
+    Route::post('/tables/{table}/rows', [TableController::class, 'store']);
+});
 
 
 Route::middleware('auth:sanctum')->group(function () {
 
+    Route::apiResource('/position-titles', PositionTitleController::class);
+    
     // User Controller
     Route::get('/get-user/{id}', [UserController::class, 'index']);
 
     // Function Position Controller
-    Route::get('/function-positions/nested', [FunctionPositionController::class, 'nested']);
     Route::get('/description/{id}', [FunctionPositionController::class, 'getDescriptionById']);
     Route::post('/reorder-functions', [FunctionPositionController::class, 'reorderFunctions']);
     Route::post('/reorder-subfunctions', [FunctionPositionController::class, 'reorderSubfunctions']);
@@ -38,6 +48,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/manage-description', [FunctionPositionController::class, 'manageDescription']);
     Route::post('/delete-function', [FunctionPositionController::class, 'deleteFunction']);
     Route::get('/function-positions', [FunctionPositionController::class, 'index']);
+    Route::get('/subfunction-dept/{dept}/{position?}', [FunctionPositionController::class, 'getSubfunctionDept']);
+    Route::get('/function-positions/nested', [FunctionPositionController::class, 'nested']);
 
     // Organization Structure Controller
     Route::put('/organization-structure/update', [OrgStructureController::class, 'update']);
@@ -47,10 +59,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/upload-image', [OrgStructureController::class, 'uploadImage']);
     Route::get('/user-profile/{email}', [OrgStructureController::class, 'userProfile']);
     Route::get('/team-members/{id}', [OrgStructureController::class, 'teamMembers']);
-    Route::get('/organization-structure', [OrgStructureController::class, 'index']);
     Route::get('/indirect-reporting/{id}', [OrgStructureController::class, 'indirectReporting']);
     Route::get('/get-head-count', [OrgStructureController::class, 'getHeadCount']);
-
+    Route::get('/organization-structure', [OrgStructureController::class, 'index']);
+    
     // Audit Log Controller
     Route::get('/functional-audit-logs', [AuditLogController::class, 'getFunctionalAuditLogs']);
     Route::get('/org-structure-audit-logs', [AuditLogController::class, 'getOrgStructureAuditLogs']);
@@ -58,8 +70,8 @@ Route::middleware('auth:sanctum')->group(function () {
     // My Profile Controller
     Route::post('/my-profile/store', [MyProfileController::class, 'store']);
     Route::get('/my-profile/download-pdf/{id}', [MyProfileController::class, 'exportPdf']);
-    Route::get('/my-profile/{id}', [MyProfileController::class, 'show']);
     Route::get('/my-profile/edit/{id}', [MyProfileController::class, 'edit']);
+    Route::get('/my-profile/{id}', [MyProfileController::class, 'show']);
 
     // About Controller (About Us Tab)
     Route::post('/about/upsert', [AboutController::class, 'upsert']);
@@ -68,8 +80,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/about/{id}', [AboutController::class, 'showByProfileId']);
 
     // Position Title Controller
-    Route::apiResource('/position-titles', PositionTitleController::class);
 });
 
 
-    Route::get('/subfunction-dept/{dept}/{position?}', [FunctionPositionController::class, 'getSubfunctionDept']);
+

@@ -9,11 +9,9 @@ return new class extends Migration {
     {
         Schema::create('a_language_proficiencies', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('a_about_id')->constrained('a_abouts')->cascadeOnDelete();
+            $table->foreignId('about_id')->constrained('a_abouts')->cascadeOnDelete();
             $table->string('language');
-            $table->boolean('written')->default(false);
             $table->string('w_prof')->nullable();
-            $table->boolean('spoken')->default(false);
             $table->string('s_prof')->nullable();
             $table->timestamps();
             $table->softDeletes();

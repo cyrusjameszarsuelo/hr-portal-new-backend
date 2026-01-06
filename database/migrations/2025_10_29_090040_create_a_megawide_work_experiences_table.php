@@ -9,18 +9,17 @@ return new class extends Migration {
     {
         Schema::create('a_megawide_work_experiences', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('a_about_id')->constrained('a_abouts')->cascadeOnDelete();
+            $table->foreignId('about_id')->constrained('a_abouts')->cascadeOnDelete();
             // Current role snapshot (one per About)
-            $table->string('job_title')->nullable();
-            $table->string('department')->nullable();
-            $table->string('unit')->nullable();
-            $table->string('job_level')->nullable();
+            $table->foreignId('position_title_id')->nullable()->constrained('position_titles')->onDelete('set null');
+            $table->foreignId('department_id')->nullable()->constrained('departments')->onDelete('set null');
+            $table->foreignId('sbu_id')->nullable()->constrained('sbus')->onDelete('set null');
+            $table->foreignId('level_id')->nullable()->constrained('levels')->onDelete('set null');
             $table->string('employment_status')->nullable();
             $table->date('current_role_start_date')->nullable();
             $table->date('current_role_end_date')->nullable();
             $table->boolean('is_current')->default(true);
-            $table->unique('a_about_id');
-            // No timestamps as per spec
+            $table->unique('about_id');
         });
     }
 

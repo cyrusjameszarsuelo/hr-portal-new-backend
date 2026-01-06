@@ -9,7 +9,7 @@ return new class extends Migration {
     {
         Schema::create('a_interests', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('a_about_id')->constrained('a_abouts')->cascadeOnDelete();
+            $table->foreignId('about_id')->constrained('a_abouts')->cascadeOnDelete();
             $table->string('interest');
             $table->timestamps();
             $table->softDeletes();

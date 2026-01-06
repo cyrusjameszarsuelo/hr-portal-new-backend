@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('subfunction_descriptions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('subfunction_position_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('subfunction_position_id')->nullable()->constrained()->onDelete('set null');
             $table->text('description');
             $table->integer('order_id')->nullable();
             $table->timestamps();

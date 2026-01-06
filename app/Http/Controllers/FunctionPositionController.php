@@ -98,14 +98,30 @@ class FunctionPositionController extends Controller
 
     public function getSubfunctionDept(string $dept, string $position)
     {
-        $subfunctions = SubfunctionPosition::with(['jobProfileKras' => function ($q) use ($dept, $position) {
-                $q->where('department', 'LIKE', $dept)
-                  ->where('roles', 'LIKE', "%$position%");
-            }, 'jobProfileKras.jobProfileDuties'])
+        $subfunctions = SubfunctionPosition::with([
+            'jobProfileKras' => function ($q) use ($dept, $position) {
+                $q->where(function ($w) use ($position) {
+                    $w->where('roles', $position)
+                        ->orWhere('roles', 'LIKE', "$position;%")
+                        ->orWhere('roles', 'LIKE', "%; $position;%")
+                        ->orWhere('roles', 'LIKE', "%; $position")
+                        // also match tokens when semicolons are not followed/preceded by a space
+                        ->orWhere('roles', 'LIKE', "%;$position;%")
+                        ->orWhere('roles', 'LIKE', "%;$position");
+                });
+            },
+            'jobProfileKras.jobProfileDuties'
+        ])
             ->whereHas('jobProfileKras', function ($query) use ($dept, $position) {
-                $query->where('department', 'LIKE', $dept)
-                      ->where('roles', 'LIKE', "%$position%");
-                      
+                $query->where(function ($w) use ($position) {
+                    $w->where('roles', $position)
+                        ->orWhere('roles', 'LIKE', "$position;%")
+                        ->orWhere('roles', 'LIKE', "%; $position;%")
+                        ->orWhere('roles', 'LIKE', "%; $position")
+                        // also match tokens when semicolons are not followed/preceded by a space
+                        ->orWhere('roles', 'LIKE', "%;$position;%")
+                        ->orWhere('roles', 'LIKE', "%;$position");
+                });
             })
             ->orderBy('order_id')
             ->get();

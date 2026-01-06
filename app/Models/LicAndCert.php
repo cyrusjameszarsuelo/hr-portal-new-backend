@@ -12,7 +12,7 @@ class LicAndCert extends Model
     protected $table = 'a_lic_and_certs';
 
     protected $fillable = [
-        'a_about_id',
+        'about_id',
         'license_certification_name',
         'issuing_organization',
         'license_certification_number',
@@ -29,6 +29,6 @@ class LicAndCert extends Model
 
     public function about()
     {
-        return $this->belongsTo(About::class, 'a_about_id');
+        return $this->belongsTo(About::class, 'about_id');
     }
 }

@@ -12,7 +12,7 @@ class PrevWorkExperience extends Model
     protected $table = 'a_prev_work_experiences';
 
     protected $fillable = [
-        'a_about_id',
+        'about_id',
         'company',
         'job_title',
         'job_level',
@@ -22,6 +22,6 @@ class PrevWorkExperience extends Model
 
     public function about()
     {
-        return $this->belongsTo(About::class, 'a_about_id');
+        return $this->belongsTo(About::class, 'about_id');
     }
 }

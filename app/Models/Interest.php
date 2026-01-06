@@ -12,12 +12,12 @@ class Interest extends Model
     protected $table = 'a_interests';
 
     protected $fillable = [
-        'a_about_id',
+        'about_id',
         'interest',
     ];
 
     public function about()
     {
-        return $this->belongsTo(About::class, 'a_about_id');
+        return $this->belongsTo(About::class, 'about_id');
     }
 }

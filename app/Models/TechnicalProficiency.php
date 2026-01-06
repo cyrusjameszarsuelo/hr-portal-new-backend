@@ -12,13 +12,13 @@ class TechnicalProficiency extends Model
     protected $table = 'a_technical_proficiencies';
 
     protected $fillable = [
-        'a_about_id',
+        'about_id',
         'skills',
         'proficiency',
     ];
 
     public function about()
     {
-        return $this->belongsTo(About::class, 'a_about_id');
+        return $this->belongsTo(About::class, 'about_id');
     }
 }

@@ -15,18 +15,23 @@ class MicrosoftAuthController extends Controller
 {
     public function redirectToMicrosoft()
     {
-        // Use stateless because the frontend (React) is on a different origin
-        // and we issue tokens instead of using session-based auth.
+        // get platform hint from the incoming query (default to 'web')
+        $platform = request()->query('platform', 'web');
+
+        // encode small state payload (base64 to keep it URL safe)
+        $statePayload = base64_encode(json_encode(['platform' => $platform]));
+
         /** @var \Laravel\Socialite\Two\AbstractProvider $driver */
         $driver = Socialite::driver('microsoft');
 
-        return $driver->stateless()->redirect();
+        // include our state payload in the provider request (stateless flow)
+        return $driver->stateless()->with(['state' => $statePayload])->redirect();
     }
 
     public function handleMicrosoftCallback()
     {
         try {
-            // Debug: log incoming request for diagnosis (remove in production)
+            // Log incoming request for diagnosis
             $query = request()->query();
             Log::info('Microsoft callback hit', ['full_url' => request()->fullUrl(), 'query' => $query]);
 
@@ -49,10 +54,8 @@ class MicrosoftAuthController extends Controller
             ], [
                 'name' => $microsoftUser->getName(),
                 'microsoft_id' => $microsoftUser->getId(),
-                // The users table requires a password; generate a random hashed password
-                // since authentication for MS users will be token-based via Sanctum.
-                // 'password' => Hash::make(Str::random(40)),
                 'job_title' => $microsoftUser->user['jobTitle'] ?? null,
+                'password' => "password", // Hash::make(Str::random(16)), // Random password since we use Microsoft OAuth
                 'last_login_at' => now(),
             ]);
 
@@ -65,15 +68,30 @@ class MicrosoftAuthController extends Controller
             // Create API token (Sanctum)
             $token = $user->createToken('authToken')->plainTextToken;
 
+            // Decide which frontend redirect to use based on the state payload
+            $state = request()->query('state');
+            $platform = 'web';
+            if ($state) {
+                // attempt to decode state if we encoded it earlier
+                $decoded = @json_decode(base64_decode($state), true);
+                if (is_array($decoded) && !empty($decoded['platform'])) {
+                    $platform = $decoded['platform'];
+                }
+            }
+
+            // pick the target frontend redirect
+            $frontendTarget = ($platform === 'mobile')
+                ? env('MICROSOFT_REDIRECT_FRONTEND_URI_MOBILE')
+                : env('MICROSOFT_REDIRECT_FRONTEND_URI');
+
             // If request expects JSON (ajax from frontend) return token JSON
             if (request()->wantsJson()) {
                 return response()->json(['token' => $token, 'user' => $user]);
             }
 
-            // Otherwise redirect to frontend with token in querystring
-            return redirect(env('MICROSOFT_REDIRECT_FRONTEND_URI') . "?token={$token}&user_id={$user->id}");
+            // Final redirect to the chosen frontend target
+            return redirect($frontendTarget . "?token={$token}&user_id={$user->id}");
         } catch (\Exception $e) {
-            // Log the exception for investigation
             Log::error('Microsoft OAuth error', ['message' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
             return response()->json(['error' => 'Unable to authenticate with Microsoft', 'message' => $e->getMessage()], 500);
         }

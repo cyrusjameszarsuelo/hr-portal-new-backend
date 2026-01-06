@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('subfunction_positions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('function_position_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('function_position_id')->nullable()->constrained()->onDelete('set null');
             $table->string('name');
             $table->integer('order_id')->nullable();
             $table->timestamps();
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('subfunction_positions');
+        Schema::dropIfExists('subfunctions');
     }
 };
